@@ -1,8 +1,11 @@
-function compute_dti(input_dir, output_dir, data_folders, params)
+%% Compute DTIs on the original DW images and its downsampled version.
+% As a result, we obtain a pair of high-res and low-res DTIs. 
+
+function compute_dti(input_dir, output_dir, data_folders, settings)
 
 % Fetch the parameters:
-dt_name = params.dt_name;
-ds = params.upsample_rate; % downsampling rate
+dt_name = settings.dt_name;
+ds = settings.upsample_rate; % downsampling rate
 
 for fi = 1:length(data_folders)
     if(~exist([output_dir '/'  data_folders{fi} ]))
@@ -149,7 +152,7 @@ for fi = 1:length(data_folders)
     %% ------- Step 2: Compute the DTI of downsampled (low-resolution) DWI ----
     % Create low-res DTI after averaging the DW data over various nxnxn blocks 
     
-    ds = params.upsample_rate; % up-sample rate.
+    ds = settings.upsample_rate; % up-sample rate.
     dtl = zeros(XSIZE,YSIZE,ZSIZE,8);
     dtl(:,:,:,1) = -1;
     dtl_mask_invalid_tensors = zeros(XSIZE,YSIZE,ZSIZE);

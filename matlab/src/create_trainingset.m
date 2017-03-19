@@ -1,11 +1,19 @@
-function create_trainingset(input_dir, output_dir, data_folders, params)
-% Merge patch libraries from a training set of data sets.
+%% Create training sets from the patch-libraries of selected subjects.
+% We randomly subsample from respective patch-libraries and merge them to
+% form a training set. 
 
-SampleRate = params.subsample_rate;
-rnds = params.no_rnds;
-n = params.input_radius; % the radius of the low-res patch. 
-ds = params.upsample_rate;
+function create_trainingset(input_dir, output_dir, data_folders, settings)
+
+
+SampleRate = settings.subsample_rate;
+rnds = settings.no_rnds;
+n = settings.input_radius; % the radius of the low-res patch. 
+ds = settings.upsample_rate;
 m = ds;
+
+if(~exist(output_dir))
+    mkdir(output_dir);
+end
 
 % Loop over randomizations
 for si = 1:rnds
@@ -13,7 +21,7 @@ for si = 1:rnds
         load([input_dir '/' data_folders{i} '/' ...
               sprintf('ipatchlibDS%02i_N%02i', ds, n)]);
         load([input_dir '/' data_folders{i} '/' ...
-              sprintf('opatchlibDS%02i_N01_M%02i', ds, m)]);
+              sprintf('opatchlibDS%02i_N%02i_M%02i', ds, n, m)]);
           
 %         if(n>1)
 %             % Need to subsample the opatchlib to match the ipatchlib
@@ -38,9 +46,10 @@ for si = 1:rnds
     comipatchlib = single(comipatchlib);
     comopatchlib = single(comopatchlib);
 
-    filename = sprintf('PatchLibs_DS%02i_%ix%ix%i_%ix%ix%i_Subi%03i_%04i.mat', ds, 2*n+1,2*n+1,2*n+1, m, m, m, SampleRate, si);
-    disp(['Saving the patch-library as' filename ])
+    filename = sprintf('PatchLibs_DS%02i_%ix%ix%i_%ix%ix%i_Sub%03i_%04i.mat', ds, 2*n+1,2*n+1,2*n+1, m, m, m, SampleRate, si);
+    disp(['Saving the patch-library as: ' filename ])
     save([output_dir '/' filename], 'comipatchlib', 'comopatchlib', 'patchlibindices', '-v7.3');
 end
+disp(['The training set is available at: ' output_dir])
 
 

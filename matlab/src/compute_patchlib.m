@@ -1,9 +1,13 @@
-function compute_patchlib(input_dir, output_dir, data_folders, params)
+%% Extract patches from the low-res/high-res DT images.
+% We create exhaustive list of all valid patch pairs and store them 
+%in a large matrix.
+
+function compute_patchlib(input_dir, output_dir, data_folders, settings)
 
 % Fetch the parameters:
-dt_name = params.dt_name;
-ds = params.upsample_rate; % downsampling rate
-input_radius = params.input_radius; % the radius of the low-res patch. 
+dt_name = settings.dt_name;
+ds = settings.upsample_rate; % downsampling rate
+input_radius = settings.input_radius; % the radius of the low-res patch. 
 output_radius = ds;
 
 % compute patch libaries sequentiatlly for all subjects.
@@ -68,8 +72,8 @@ for fi = 1:length(data_folders)
     
     % Save the indices (not neccesary).
     indices_patchlib_to_volume = indices_valid_features;
-    save( [ output_folder sprintf('indices_patchlib_to_volumeDS%02i_N%02i',...
-            ds, input_radius) ] , 'indices_patchlib_to_volume' );
+    save([output_folder '/' sprintf('indices_patchlib_to_volumeDS%02i_N%02i',...
+          ds, input_radius) ], 'indices_patchlib_to_volume' );
 
     % ------------ Extract patches from low-res DTI (input) --------------
     % Extract and rasterise all valid patches from low-res DTI, and put
@@ -81,7 +85,7 @@ for fi = 1:length(data_folders)
     dt_lr = zeros( dim1 , dim2 , dim3 , 6 );
     for i=1:6
         dt_lr(:,:,:,i) = read_std_nii(...
-                         [input_folder ...
+                         [input_folder '/' ...
                           dt_lowres_name num2str(i+2) '.nii' ]);
     end
     
@@ -105,7 +109,7 @@ for fi = 1:length(data_folders)
     disp('done.')
 
     disp('saving patch library...')
-    save([output_folder ...
+    save([output_folder '/' ...
           sprintf('ipatchlibDS%02i_N%02i', ds, input_radius)], ...
           'ipatchlib', '-v7.3');
     disp('done.')
@@ -120,7 +124,7 @@ for fi = 1:length(data_folders)
     
     % load the high-res dti
     for i=1:6
-        dt(:,:,:,i) = read_std_nii([input_folder ...
+        dt(:,:,:,i) = read_std_nii([input_folder '/' ...
                                     dt_name num2str(i+2), '.nii' ]);
     end
     
@@ -139,7 +143,7 @@ for fi = 1:length(data_folders)
     disp('done.')
 
     disp('saving patch library...')
-    save([output_folder ...
+    save([output_folder '/' ...
          sprintf('opatchlibDS%02i_N%02i_M%02i', ds, input_radius, ds)],...
          'opatchlib', '-v7.3' );
     disp('done.')
