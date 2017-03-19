@@ -1,20 +1,14 @@
+% Train trees:
 
-%% Load in training data
-DATAPATH='/cs/research/vision/hcp/DCA_HCP.2013.3_Proc/TrainingData';
-DATAPATH='/SAN/vision/hcp/DCA_HCP.2013.3_Proc/TrainingData';
-
-
-%% Training sets for generalisation demonstration
-% Super-res runs                
-TrainingDataFiles = {'DiverseDS02_5x5_2x2_TS8_SRi032_0001.mat', 'DiverseDS02_5x5_2x2_TS8_SRi032_0002.mat', 'DiverseDS02_5x5_2x2_TS8_SRi032_0003.mat', 'DiverseDS02_5x5_2x2_TS8_SRi032_0004.mat',...
-                     'DiverseDS02_5x5_2x2_TS8_SRi032_0005.mat', 'DiverseDS02_5x5_2x2_TS8_SRi032_0006.mat', 'DiverseDS02_5x5_2x2_TS8_SRi032_0007.mat', 'DiverseDS02_5x5_2x2_TS8_SRi032_0008.mat'};
-
+function train_trees(input_dir, output_dir, settings)
 %% Define variables and display for checking
-% Patch size
-settings.n=3;
-% Downsampling factor
-settings.ds=2;
-% Feature version
+% Patch size (input patch radius). (!) Duplication. Remove
+settings.n=settings.input_radius; 
+% Downsampling factor 
+settings.ds=settings.upsample_rate;
+% Output patch radius.
+settings.m=settings.ds;
+% Version of feature set
 settings.fv=6;
 % Don't include spatial locations in the feature list.
 settings.spatial=0;
@@ -50,16 +44,24 @@ if(strcmp(settings.parmap, 'H4_2_H4'))
 end
 
 settings
-    
+
+%% Get the list of training sets
+TrainingDataFiles = {};
+for si = 1:settings.no_rnds
+    TrainingDataFiles{end+1} = sprintf('_DS%02i_%ix%ix%i_%ix%ix%i_Sub%03i_%04i.mat', ...
+    settings.ds, 2*settings.n+1,2*settings.n+1,2*settings.n+1, settings.m, settings.m, settings.m, settings.subsample_rate, si);
+end
+
 
 %% Loop over training data sets.
+    
 for tfi=1:length(TrainingDataFiles)
 
     display(TrainingDataFiles{tfi})
-    load([DATAPATH '/PatchLibs' TrainingDataFiles{tfi}])
+    load([input_dir '/PatchLibs' TrainingDataFiles{tfi}])
 
     % Compute candidate split features.
-    FeatureFileName = [DATAPATH '/FeaturesV' int2str(settings.fv) '_' TrainingDataFiles{tfi} '.mat'];
+    FeatureFileName = [input_dir '/FeaturesV' int2str(settings.fv) TrainingDataFiles{tfi}];
     if(~exist(FeatureFileName, 'file'))
         display('Computing features...')
         tic;
@@ -73,6 +75,7 @@ for tfi=1:length(TrainingDataFiles)
         feature_source = [];
         toc
     else
+        display('Loading features...')
         load(FeatureFileName);
     end
 
@@ -111,10 +114,10 @@ for tfi=1:length(TrainingDataFiles)
         test_in = [comipatchlib(test_inds,:)'; settings.scale*ones(1,length(test_inds))]';
         test_out = comopatchlib(test_inds,:);
     end
-
+    
+    % Compute the root node of the tree: perform linear regression
     M = train_in\train_out;
     S = train_out - (M'*train_in')';
-    % Maintain a global error score for AIC/BIC implementation
     globalE = S;
     S = S'*S/length(train_in);
     Sv = test_out - (M'*test_in')';
@@ -135,6 +138,7 @@ for tfi=1:length(TrainingDataFiles)
         rootnode.TestDataIndices=1:length(test_features);
     end
     
+    % Grow the tree:
     tree = {rootnode};
     nextind = 2;
     max_layers = 20;
@@ -148,20 +152,6 @@ for tfi=1:length(TrainingDataFiles)
                 if(strcmp(settings.trunc, 'validation'))
                     % Validation set splitting
                     [tn, ln, rn, split_rel_error] = SplitNodeValidPar(tree{j}, train_in, train_out, train_features, test_in, test_out, test_features, settings);
-                else
-                    % AIC or BIC splitting
-                    [tn, ln, rn, newGlobalE] = SplitNodeAIC_Par(tree{j}, train_in, train_out, train_features, globalE);
-                    SigNoSplit = sum(sum(globalE.^2))/length(train_inds)
-                    SigAfterSplit = sum(sum(newGlobalE.^2))/length(train_inds)
-                    if(strcmp(settings.trunc, 'AIC'))
-                        delAIC = length(train_inds)*(log(SigAfterSplit) - log(SigNoSplit)) + 2*(settings.ds*settings.ds*settings.ds+2)*(2*settings.n+1)^3 + 4;
-                        split_rel_error = delAIC;
-                    elseif(strcmp(settings.trunc, 'BIC'))
-                        delBIC = length(train_inds)*(log(SigAfterSplit) - log(SigNoSplit)) + log(length(train_inds))*((settings.ds*settings.ds*settings.ds+2)*(2*settings.n+1)^3 + 2);
-                        split_rel_error = delBIC;
-                    else
-                        error('Unknown truncation strategy');
-                    end
                 end
                 
                 display(sprintf('Relative split error: %d.', split_rel_error));
@@ -177,22 +167,21 @@ for tfi=1:length(TrainingDataFiles)
                     tree{nextind+1} = rn;
                     nextind = nextind+2;
                     change = 1;
-                    if(strcmp(settings.trunc, 'AIC') || strcmp(settings.trunc, 'BIC'))
-                        globalE = newGlobalE;
-                    end
-                    
                 end
                 tree{j}.Visited = 1;
             end
         end
-        %save /tmp/tree_temp.mat tree
+        
         if(~change)
             break;
         end
     end
-
     toc
-
-    save([DATAPATH '/RegTreeValV' int2str(settings.fv) '_' TrainingDataFiles{tfi}], 'tree', 'train_inds', 'settings');
+    
+    % Save the tree:
+    if(~exist(output_dir))
+        mkdir(output_dir);
+    end
+    save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'train_inds', 'settings');
 
 end
