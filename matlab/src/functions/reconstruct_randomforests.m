@@ -1,14 +1,13 @@
 function reconstruct_randomforests(data_folders, settings)
 
 %% Configurations:
-% Parameters:
-patchlibs_dir = settings.patchlibs_dir;
-features_dir = settings.features_dir;
-trees_dir = settings.trees_dir;
+% Paths:
 input_dir = settings.input_dir;
-dt_name = settings.dt_name;
 output_dir = settings.output_dir;
+trees_dir = settings.trees_dir;
 trees_list = settings.trees_list;
+patchlibs_dir = settings.patchlibs_dir;
+dt_name = settings.dt_name;
 rescale_factor = 1.0;
 scale_const = 1E-3;
 
@@ -46,7 +45,7 @@ for dataid = 1:length(data_folders)
     % Load in the original and low-res diffusion tensor images:
     % original res
     file_orig = [input_dir '/' data_folders{dataid} '/' dt_name];
-    dth = BigbassReadDT_Volume(file_orig);
+    dth = ReadDT_Volume(file_orig);
     [x_h, y_h, z_h, junk] = size(dth);
     clear dth
     
@@ -57,7 +56,7 @@ for dataid = 1:length(data_folders)
     % Reconstruct:
     if edge_recon % Reconstruct on the boundary.
         % compute the features:
-        FeatureMapFile = [features_dir 'FeaturesMapEdge_V' int2str(fv) '_' tail_name '.mat'];
+        FeatureMapFile = [input_dir '/' data_folders{dataid} '/FeaturesMapEdge_V' int2str(fv) '_' tail_name '.mat'];
         if(exist(FeatureMapFile))
             load(FeatureMapFile)
         else
@@ -74,10 +73,10 @@ for dataid = 1:length(data_folders)
 
         % reconstruct and save the estimated DTI and precision map:
        output_subdir  = sprintf(['RF_Edge_V' int2str(fv) '_NoTree%02i_' tail_name], length(trees_list));
-       [img_recon, img_confid] = rt_ForestSuperResEdge(dto, trees, n, m, dto_features, ds, T, comipatchmean, rescale_factor, scale_const, 'weighted_average');
+       [img_recon, img_confid] = ForestSuperResEdge(dto, trees, n, m, dto_features, ds, T, comipatchmean, rescale_factor, scale_const, 'weighted_average');
     else % perform super-resolution on the interior.
         % compute the features:
-        FeatureMapFile = [features_dir 'Features_V' int2str(fv) '_' tail_name '.mat'];
+        FeatureMapFile = [input_dir '/' data_folders{dataid} '/Features_V' int2str(fv) '_' tail_name '.mat'];
         if(exist(FeatureMapFile))
             display(['Loading feature map: ' FeatureMapFile])
             load(FeatureMapFile)
@@ -90,7 +89,7 @@ for dataid = 1:length(data_folders)
         % reconstruct and save the estimated DTI and precision map:
        output_subdir  = sprintf(['RF_V' int2str(fv) '_NoTree%02i_' tail_name], length(trees_list));
        ValidVar = 1;
-       [img_recon, img_confid, img_var] = rt_ForestSuperRes(dto, trees, n, m, featuresMap, ds, rescale_factor, ValidVar);    
+       [img_recon, img_confid, img_var] = ForestSuperRes(dto, trees, n, m, featuresMap, ds, rescale_factor, ValidVar);    
     end
 
     % crop so the output size is the same as the ground truth.
