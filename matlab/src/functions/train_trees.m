@@ -1,6 +1,5 @@
-% Train trees:
-
 function train_trees(input_dir, output_dir, settings)
+
 %% Define variables and display for checking
 % Patch size (input patch radius). (!) Duplication. Remove
 settings.n=settings.input_radius; 
@@ -9,7 +8,7 @@ settings.ds=settings.upsample_rate;
 % Output patch radius.
 settings.m=settings.ds;
 % Version of feature set
-settings.fv=6;
+settings.fv=settings.feature_version;
 % Don't include spatial locations in the feature list.
 settings.spatial=0;
 % Type of tree truncation
@@ -43,7 +42,8 @@ if(strcmp(settings.parmap, 'H4_2_H4'))
     settings.max_size_for_split = 1000000;
 end
 
-settings
+disp(settings)
+
 
 %% Get the list of training sets
 TrainingDataFiles = {};
@@ -53,11 +53,11 @@ for si = 1:settings.no_rnds
 end
 
 
-%% Loop over training data sets.
-    
+%% Train trees.
+% loop over training data sets.
 for tfi=1:length(TrainingDataFiles)
-
-    display(TrainingDataFiles{tfi})
+    display(sprintf('Training tree %i/%i', tfi, length(TrainingDataFiles)))
+    display(['on dataset: PatchLibs' TrainingDataFiles{tfi}])
     load([input_dir '/PatchLibs' TrainingDataFiles{tfi}])
 
     % Compute candidate split features.
@@ -80,7 +80,7 @@ for tfi=1:length(TrainingDataFiles)
     end
 
     % Train a regression tree with validation set
-    display('Training tree...')
+    display('Start training ...')
     train_inds = find(rand(1,length(features))<0.5);
     test_inds = setdiff(1:length(features), train_inds);
 
@@ -182,6 +182,7 @@ for tfi=1:length(TrainingDataFiles)
     if(~exist(output_dir))
         mkdir(output_dir);
     end
+    display('Saving the tree ...')
     save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'train_inds', 'settings');
-
+    fprintf('\n')
 end

@@ -28,10 +28,33 @@ compute_patchlib(dti_dir, dti_dir, data_folders, settings)
 create_trainingset(dti_dir, traindata_dir, data_folders, settings)
 
 
-%% Training of trees:
+%% Train trees:
+
+%Define parameters:
+
+%Header of DT images.
+settings.dt_name = 'dt_b1000_';
+%Radius of the low-res input patch.
+settings.input_radius = 2;
+%Upsampling rate
+settings.upsample_rate = 2; 
+%Subsampling rate.
+settings.subsample_rate = 32; 
+%No of training sets. You train one tree on each set.
+settings.no_rnds = 8; 
+%Feature set used in Neuroimage paper. See PatchFeatureList.m for details.
+settings.feature_version = 6; 
 
 
+%Set the paths:
 
+%Dir where training data is stored
+traindata_dir = '~/tmp/iqt_codes/training_data'; 
+%Dir where you save the trained trees
+trees_dir = '~/tmp/iqt_codes/trees';
+
+%Train trees
+train_trees(traindata_dir, trees_dir, settings)
 
 %% Testing (reconstruction):
 
