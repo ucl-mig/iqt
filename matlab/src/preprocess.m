@@ -1,10 +1,9 @@
-% IQT for DTI Super-Resolution:
-% This script performs preprocessing and generates training set.
+%% Perform preprocessing and generate training data:
 
 % Set the paths:
-dwi_dir = '/Path/where/DWIs/are/stored'; 
-dti_dir = '/Path/where/DTIs/are/stored';
-traindata_dir = '/Path/where/training/sets/are/stored';
+dwi_dir = '/dir/where/DWIs/are/stored'; 
+dti_dir = '/dir/where/DTIs/are/stored';
+traindata_dir = '/dir/where/training/sets/are/stored';
 data_folders = {'subject_1','subject_2','subject_3'}; % list of sub-dirs.
 
 settings.dt_name = 'dt_b1000_';

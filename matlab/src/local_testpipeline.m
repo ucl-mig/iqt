@@ -58,3 +58,25 @@ train_trees(traindata_dir, trees_dir, settings)
 
 %% Testing (reconstruction):
 
+%Header of DT images.
+settings.dt_name = 'dt_b1000_';
+%Radius of the low-res input patch.
+settings.input_radius = 2;
+%Upsampling rate
+settings.upsample_rate = 2; 
+%Subsampling rate.
+settings.subsample_rate = 32; 
+%Feature set used in Neuroimage paper. See PatchFeatureList.m for details.
+settings.feature_version = 6; 
+% Set true to perform boundary completion.
+settings.edge = 0;
+
+% Paths:
+settings.input_dir = '~/tmp/iqt_codes'; 
+settings.output_dir = '~/tmp/iqt_codes/recon';
+settings.trees_dir = '~/tmp/iqt_codes/trees';
+settings.trees_list = [1:8];
+settings.patchlibs_dir = '~/tmp/iqt_codes/training_data';
+data_folders = {'117324/T1w/Diffusion'};
+
+reconstruct_randomforests(data_folders, settings)

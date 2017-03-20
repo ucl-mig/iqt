@@ -1,10 +1,10 @@
-function [dtreconrf, forest_accum] = rt_ForestSuperResEdge(dt_lowres, trees, n, m, patch_feature_map, us, T, comipatchmean, rescale_factor, scale_const, overlap)
+function [dtreconrf, forest_accum] = ForestSuperResEdge(dt_lowres, trees, n, m, patch_feature_map, us, T, comipatchmean, rescale_factor, scale_const, overlap)
 % dtreconrf: estimated high-res dti
 % forest_accum: average precision of the prediction over all trees
 for i=1:length(trees)
      
     % Do the reconstruction
-    [dtreconrt, accum] = rt_TreeSuperResEdge(dt_lowres, trees{i}, n, m, patch_feature_map, us, T, comipatchmean, overlap, rescale_factor, scale_const);
+    [dtreconrt, accum] = TreeSuperResEdge(dt_lowres, trees{i}, n, m, patch_feature_map, us, T, comipatchmean, overlap, rescale_factor, scale_const);
 
     % Reweight the reconstruction by the accumulator for this contribution.
     fg_inds = find(dtreconrt(:,:,:,1)==0);
