@@ -39,7 +39,7 @@ We used Human Connectome Project (HCP) in-vivo human diffusion MRI dataset, whic
 The pipeline works in three stages: 1. preprocessing (`preprocess.m`); 2. training (`train.m`); 3. testing (`test.m`).
 
 <table>
-<tr><td>preprocess.m  </td><td> compute diffusion tensor images from diffusion weighted images, and create training data consisting of matched pairs of high-res and low-res patches.
+<tr><td>preprocess.m  </td><td> preprocess the raw data downloaded from HCP, and generate training sets.
 </td></tr> <tr><td>train.m </td><td> train regression trees on specified data sets.
 </td></tr><tr><td>test.m </td><td>  perform super-resolution on a given diffusion tensor image
 </td></tr></table>
