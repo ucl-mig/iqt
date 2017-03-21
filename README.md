@@ -18,15 +18,17 @@ This repository contains Matlab codes for the IQT framework proposed in our rece
 ### Citation
 
 If you use this pipeline in your research, please cite:
+
       @article{alexander2017image,
         title={Image quality transfer and applications in diffusion MRI},
-        author={Alexander, Daniel C and Zikic, Darko and Ghosh, Aurobrata and Tanno, Ryutaro and Wottschel, Viktor and Zhang, Jiaying and Kaden, Enrico and Dyrby, Tim B and Sotiropoulos, Stamatios N and Zhang, Hui and others},
+        author={Daniel C. Alexander and Darko Zikic and Aurobrata Ghosh and Ryutaro Tanno and Viktor Wottschel and Jiaying Zhang and Enrico Kaden and Tim B Dyrby and Stamatios N Sotiropoulos and Hui Zhang and Antonio Criminisi},
         journal={NeuroImage},
         volume={152},
         pages={283--298},
         year={2017},
         publisher={Elsevier}
       }
+      
 ### How to use IQT framework
 
 ### Third-party re-implementations
