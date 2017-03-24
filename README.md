@@ -4,6 +4,7 @@
 0. [Introduction](#introduction)
 0. [Citation](#citation)
 0. [Disclaimer and known issues](#disclaimer-and-known-issues)
+0. [Data](#data)
 0. [How to use IQT framework](#models)
 0. [Results](#results)
 0. [Third-party re-implementations](#third-party-re-implementations)
@@ -16,9 +17,9 @@ The paper introduces a new computational imaging technique called image quality 
 
 ### Disclaimer
 0. The current version is limited to super-resolution of diffusion tensor images, although readily extendable to the MAP-MRI super-resolution or parameter mapping applications.
+0.  
 
 ### Citation
-
 If you use this pipeline in your research, please cite:
 
       @article{alexander2017image,
@@ -31,8 +32,19 @@ If you use this pipeline in your research, please cite:
         publisher={Elsevier}
       }
       
-### How to use IQT framework
+### Data
+We used Human Connectome Project (HCP) in-vivo human diffusion MRI dataset, which is freely available at http://www.humanconnectomeproject.org/. You need to download blah blah blah ...
 
+### How to use IQT framework
+The pipeline works in three stages: 1. preprocessing (`preprocess.m`); 2. training (`train.m`); 3. testing (`test.m`).
+
+<table>
+<tr><td>preprocess.m  </td><td> preprocess the raw data downloaded from HCP, and generate training sets.
+</td></tr> <tr><td>train.m </td><td> train regression trees on specified data sets.
+</td></tr><tr><td>test.m </td><td>  perform super-resolution on a given diffusion tensor image
+</td></tr></table>
+
+You need to point to paths on your system appropriately. The default experiment settings perform x2 super-resolution with input patch 5x5x5.
 
 ### Results
 May be show some key results?
