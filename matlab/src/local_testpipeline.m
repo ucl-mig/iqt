@@ -79,4 +79,7 @@ settings.trees_list = [1:8];
 settings.patchlibs_dir = '~/tmp/iqt_codes/training_data';
 data_folders = {'117324/T1w/Diffusion'};
 
-reconstruct_randomforests(data_folders, settings)
+%reconstruct_randomforests(data_folders, settings)
+visualise_results(data_folders, settings)
+
+

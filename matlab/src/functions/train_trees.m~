@@ -185,6 +185,6 @@ for tfi=1:length(TrainingDataFiles)
     display('Saving the tree ...')
     tree = strip_tree(tree);
     save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'settings');
-    %save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'train_inds', 'settings');
+    save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'train_inds', 'settings');
     fprintf('\n')
 end

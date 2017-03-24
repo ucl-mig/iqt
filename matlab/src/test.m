@@ -23,3 +23,11 @@ data_folders = {'subject_1','subject_2','subject_3'}; % list of sub-dirs.
 
 % Perform super-resolution: 
 reconstruct_randomforests(data_folders, settings)
+
+% Visualise the MD/FA/CFA: (?) save as a .png?
+visualise_results(data_folders, settings)
+
+
+
+
+
