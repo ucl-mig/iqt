@@ -100,14 +100,22 @@ for dataid = 1:length(data_folders)
     if(~exist([output_folder '/' output_subdir]))
         mkdir([output_folder '/' output_subdir]);
     end
-    save([output_folder '/' output_subdir '/dt_recon.mat'], 'img_recon');
-    save([output_folder '/' output_subdir '/dt_confid.mat'],'img_confid') ;
+    %save([output_folder '/' output_subdir '/dt_recon.mat'], 'img_recon');
+    %save([output_folder '/' output_subdir '/dt_confid.mat'],'img_confid') ;
     save([output_folder '/' output_subdir '/settings.mat'],'settings') ;
     
     % Store the fitted DTI as mat files named dt_b1000_i, i = 1,...,8
     for i=1:8 
         tic
         write_std_nii( img_recon(:,:,:,i), [output_folder '/' output_subdir '/dt_recon_' num2str(i) ]);
+        toc
+    end
+    
+    % Store the precision (1/variance) over the estimated DTI as nifti
+    % files.
+     for i=1:8 
+        tic
+        write_std_nii( img_confid(:,:,:,i), [output_folder '/' output_subdir '/dt_confid_' num2str(i) ]);
         toc
     end
    
