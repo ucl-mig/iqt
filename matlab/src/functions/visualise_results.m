@@ -60,7 +60,7 @@ for dataid = 1:length(data_folders)
     
     % Take a slice, and compute MD, FA, CFA.
     slice_region = '(:,:,70,:)';
-    slice_region_lr = '(:,:,35,:)';
+    slice_region_lr = '(:,:,round(70/ds),:)';
     
     slice_lr=eval(['dt_lr' slice_region_lr]); dt_lr=[];
     slice_est=eval(['dt_est' slice_region]); dt_est=[]; 
@@ -90,17 +90,17 @@ for dataid = 1:length(data_folders)
     cfa_hr2(:,:,3) = flipud(cfa_hr(:,:,3)');
     
     % Plot:
-    figure; 
+    fig=figure; 
     subplot_tight(3,3,1,[0.03,0.01])
     imshow(md_lr,[]);
-    title('Input')
+    title('Low-res input')
     ylabel('MD')
     subplot_tight(3,3,2,[0.03,0.01])
     imshow(md_est,[]);
-    title('IQT-RF')
+    title('IQT-RF outut')
     subplot_tight(3,3,3,[0.03,0.01])
     imshow(md_hr,[]);
-    title('Output')
+    title('Ground truth high-res')
     
     subplot_tight(3,3,4,[0.03,0.01])
     imshow(cfa_lr2,[]);
@@ -118,5 +118,9 @@ for dataid = 1:length(data_folders)
     subplot_tight(3,3,9,[0.03,0.01])
     imshow(fa_hr,[]);
     
-    
+    %Save as a png.
+    disp('Save tbe figure as a PNG file:')
+    filename = [output_folder '/' output_subdir '/image.png'];
+    disp(['see ' filename])
+    saveas(fig,filename)
 end

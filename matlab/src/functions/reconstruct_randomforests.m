@@ -113,12 +113,10 @@ for dataid = 1:length(data_folders)
     
     % Store the precision (1/variance) over the estimated DTI as nifti
     % files.
-     for i=1:8 
-        tic
-        write_std_nii( img_confid(:,:,:,i), [output_folder '/' output_subdir '/dt_confid_' num2str(i) ]);
-        toc
-    end
-   
+    tic
+    write_std_nii(img_confid, [output_folder '/' output_subdir '/dt_confid']);
+    toc
+    
 end
 
 
