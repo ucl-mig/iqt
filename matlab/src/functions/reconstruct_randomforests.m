@@ -50,7 +50,7 @@ for dataid = 1:length(data_folders)
     clear dth
     
     % low-res:
-    dt_lr = BigbassReadDT_Volume([ input_dir '/' data_folders{dataid} '/' dt_name sprintf('lowres_%i_', ds)]);
+    dt_lr = ReadDT_Volume([ input_dir '/' data_folders{dataid} '/' dt_name sprintf('lowres_%i_', ds)]);
     dto = dt_lr(1:ds:end,1:ds:end,1:ds:end,:); % iput low-res dti.
 
     % Reconstruct:

@@ -68,7 +68,7 @@ settings.input_radius = 2;
 %Upsampling rate
 settings.upsample_rate = 2; 
 %Subsampling rate.
-settings.subsample_rate = 2; 
+settings.subsample_rate = 32; 
 %Feature set used in Neuroimage paper. See PatchFeatureList.m for details.
 settings.feature_version = 6; 
 % Set true to perform boundary completion.
