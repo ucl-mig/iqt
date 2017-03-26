@@ -55,7 +55,7 @@ for dataid = 1:length(data_folders)
     dt_est = ReadDT_Volume(file_est);
     
     file_low = [ input_dir '/' data_folders{dataid} '/' dt_name sprintf('lowres_%i_', ds)];
-    dt_lr = BigbassReadDT_Volume(file_low);
+    dt_lr = ReadDT_Volume(file_low);
     dt_lr = dt_lr(1:ds:end,1:ds:end,1:ds:end,:);
     
     % Take a slice, and compute MD, FA, CFA.
