@@ -68,7 +68,7 @@ for dataid = 1:length(data_folders)
     
     [md_lr, fa_lr, cfa_lr] = compute_MD_FA_CFA(slice_lr);
     [md_est, fa_est, cfa_est] = compute_MD_FA_CFA(slice_est);
-    [md_hr, fa_hr, cfa_hr] = compute_MD_FA_CFA(slice_est);
+    [md_hr, fa_hr, cfa_hr] = compute_MD_FA_CFA(slice_hr);
     
     % Flip:
     md_lr = flipud(md_lr');
