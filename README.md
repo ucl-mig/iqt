@@ -17,7 +17,7 @@ The paper introduces a new computational imaging technique called image quality 
 
 ### Disclaimer
 0. The current version is limited to super-resolution of diffusion tensor images, although readily extendable to the MAP-MRI super-resolution or parameter mapping applications.
-0.  
+0. Edge reconstruction can take a long time. It's best to try the pipeline first without this feature (makes sure the parameter settings.edge = 0)
 
 ### Citation
 If you use this pipeline in your research, please cite:
