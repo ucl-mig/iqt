@@ -90,7 +90,7 @@ for dataid = 1:length(data_folders)
     cfa_hr2(:,:,3) = flipud(cfa_hr(:,:,3)');
     
     % Plot:
-    margin = [0.02,0.02]
+    margin = [0.02,0.02];
     fig=figure; 
     subplot_tight(3,3,1,margin)
     imshow(md_lr,[]);

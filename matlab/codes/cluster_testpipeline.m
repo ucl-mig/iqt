@@ -7,7 +7,7 @@ dti_dir = '/SAN/vision/hcp/IQT-pre-release/DTI';
 traindata_dir = '/SAN/vision/hcp/IQT-pre-release/train-data';
 
 settings.dt_name = 'dt_b1000_';
-settings.input_radius = 2; % the radius of the low-res input patch.
+settings.input_radius = 1; % the radius of the low-res input patch.
 settings.upsample_rate = 3; % the upsampling rate
 settings.subsample_rate = 8; % the rate of subsampling.
 settings.no_rnds = 8; % no of randomisations
@@ -50,7 +50,7 @@ train_trees(traindata_dir, trees_dir, settings)
 
 %% Testing (reconstruction):
 % Set true to perform boundary completion.
-settings.edge = 0;
+settings.edge = 1;
 
 % Paths:
 settings.input_dir = '/SAN/vision/hcp/IQT-pre-release/DTI'; 
@@ -60,7 +60,9 @@ settings.trees_list = [1:8];
 settings.patchlibs_dir = '/SAN/vision/hcp/IQT-pre-release/train-data';
 data_folders = {'117324/T1w/Diffusion','904044/T1w/Diffusion'};
 
+tic
 reconstruct_randomforests(data_folders, settings)
+toc
 visualise_results(data_folders, settings)
 
 

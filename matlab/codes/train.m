@@ -21,6 +21,5 @@ traindata_dir = 'path/to/training/data';
 %Dir where you save the trained trees
 trees_dir = 'where/you/want/to/save/trees';
 
-
 %Train trees
 train_trees(traindata_dir, trees_dir, settings)
