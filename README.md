@@ -4,7 +4,6 @@
 0. [Introduction](#introduction)
 0. [Data](#data)
 0. [How to use IQT framework](#models)
-0. [Results](#results)
 0. [Citation](#citation)
 0. [Disclaimer and known issues](#disclaimer-and-known-issues)
 0. [Third-party re-implementations](#third-party-re-implementations)
@@ -30,7 +29,7 @@ The pipeline works in three stages: 1. preprocessing (`preprocess.m`); 2. traini
 You need to point to paths on your system appropriately. The default experiment settings perform x2 super-resolution with input patch 5x5x5.
 
 `test.m` automatically visualises the mean diffusivity, fractional anisotropy and colour encoded directional map for the low-res input, the predicted high-res and the ground truth, and saves as a FIG file. For example, 
-[example_1] (https://cloud.githubusercontent.com/assets/14926992/24544089/e2e18f72-15f9-11e7-8f7c-0488a8b197aa.png)
+![DTI_SR_3x3x3_3x3x3](https://cloud.githubusercontent.com/assets/14926992/24544089/e2e18f72-15f9-11e7-8f7c-0488a8b197aa.png)
 
 ### Disclaimer
 0. The current version is limited to super-resolution of diffusion tensor images, although readily extendable to the MAP-MRI super-resolution or parameter mapping applications.
