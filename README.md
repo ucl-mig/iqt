@@ -14,7 +14,7 @@ This repository contains Matlab codes for the IQT framework proposed in our rece
 The paper introduces a new computational imaging technique called image quality transfer (IQT). IQT uses machine learning to transfer the rich information available from one-off experimental medical imaging devices to the abundant but lower-quality data from routine acquisitions. The procedure uses matched pairs to learn mappings from low-quality to corresponding high-quality images. Once learned, these mappings then augment unseen low quality images, for example by enhancing image resolution or information content. In the papaer, we demonstrate IQT using a simple patch-regression implementation and the uniquely rich diffusion MRI data set from the human connectome project (HCP). Results highlight potential benefits of IQT in both brain connectivity mapping and microstructure imaging. In brain connectivity mapping, IQT reveals, from standard data sets, thin connection pathways that tractography normally requires specialised data to reconstruct. In microstructure imaging, IQT shows potential in estimating, from standard “single-shell” data (one non-zero b-value), maps of microstructural parameters that normally require specialised multi-shell data. Further experiments show strong generalisability, highlighting IQT's benefits even when the training set does not directly represent the application domain. The concept extends naturally to many other imaging modalities and reconstruction problems. For details, please refer to the original paper!
 
 ### Data
-This demostration requires HCP in-vivo human diffusion MRI dataset, which is freely available at http://www.humanconnectome.org/documentation/MGH-diffusion/index.html. To try the IQT framework for DTI super-resolution, you need to dowload the diffusion data with b-value = 1000. 
+This demostration requires HCP in-vivo human diffusion MRI dataset, which is freely available at [here](http://www.humanconnectome.org/documentation/MGH-diffusion/index.html). To try the IQT framework for DTI super-resolution, you need to dowload the diffusion data with b-value = 1000. 
 
 ### How to use IQT framework
 The pipeline works in three stages: 1. preprocessing (`preprocess.m`); 2. training (`train.m`); 3. testing (`test.m`).
@@ -31,10 +31,6 @@ You need to point to paths on your system appropriately. Some trained trees are 
 ![DTI_SR_3x3x3_3x3x3](https://cloud.githubusercontent.com/assets/14926992/24544089/e2e18f72-15f9-11e7-8f7c-0488a8b197aa.png)
 
 
-### Disclaimer
-0. The current version is limited to super-resolution of diffusion tensor images. 
-0. Boundary reconstruction can take a long time (~2 hours per subject). It's best to try the pipeline first without this feature (makes sure the parameter `settings.edge = 0`).
-
 ### Citation
 If you use this pipeline in your research, please cite:
 
@@ -47,3 +43,7 @@ If you use this pipeline in your research, please cite:
         year={2017},
         publisher={Elsevier}
       }
+
+### Disclaimer
+0. The current version is limited to super-resolution of diffusion tensor images. 
+0. Boundary reconstruction can take a long time (~2 hours per subject). It's best to try the pipeline first without this feature (makes sure the parameter `settings.edge = 0`).
