@@ -46,4 +46,4 @@ If you use this pipeline in your research, please cite:
 
 ### Disclaimer
 0. The current version is limited to super-resolution of diffusion tensor images. 
-0. Boundary reconstruction can take a long time (~2 hours per subject). It's best to try the pipeline first without this feature (makes sure the parameter `settings.edge = 0`).
+0. Boundary reconstruction can take some time (~2 hours per subject). It's best to try the pipeline first without this feature (makes sure the parameter `settings.edge = 0`).
