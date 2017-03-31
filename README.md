@@ -27,7 +27,7 @@ The pipeline works in three stages: 1. preprocessing (`preprocess.m`); 2. traini
 
 You need to point to paths on your system appropriately. Some trained trees are provided in this repository and can be found in the directory `trees`. For fast trial of this pipeline, we recommend you to skip the most time-consuming step 2, and perform the reconstruction with these already trained trees. The default experiment settings perform x3 super-resolution with input patch 5x5x5. By default, the reconstruction on the outer boundary of the brain requires a separate reconstruction method and is ignored. If you wish to perform boundary complettion, just set `settings.edge = 1` in `test.m`. Reconstruction takes about 10 minutes/2 hours for each subject with 8 trees without/with boundary completion. 
 
-`test.m` automatically visualises the mean diffusivity (MD), fractional anisotropy (FA) and colour encoded directional map (CFA) for the low-res input, the predicted high-res and the ground truth, and saves as a FIG file. For example, the figure below illustrates results of x3 super-resolution with 3x3x3 input patch on subject 117324. Note that no boundary completion was performed here. 
+`test.m` also automatically visualises the mean diffusivity (MD), fractional anisotropy (FA) and colour encoded directional map (CFA) of the predicted high-res DTI, and saves as a FIG file. For example, the figure below illustrates results of x3 super-resolution with 3x3x3 input patch on subject 117324. Note that no boundary completion was performed here. 
 ![DTI_SR_3x3x3_3x3x3](https://cloud.githubusercontent.com/assets/14926992/24544089/e2e18f72-15f9-11e7-8f7c-0488a8b197aa.png)
 
 
