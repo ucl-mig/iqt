@@ -1,3 +1,2 @@
 .DS_Store
-#./matlab/TrainingData/*
-./matlab/src/local_*
+./matlab/trees/*
