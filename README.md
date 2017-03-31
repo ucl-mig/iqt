@@ -26,14 +26,15 @@ The pipeline works in three stages: 1. preprocessing (`preprocess.m`); 2. traini
 </td></tr><tr><td>test.m </td><td>  perform super-resolution on a given diffusion tensor image
 </td></tr></table>
 
-You need to point to paths on your system appropriately. The default experiment settings perform x2 super-resolution with input patch 5x5x5.
+You need to point to paths on your system appropriately. Some trained trees are provided in this repository and can be found in the directory `trees`. For fast trial of this pipeline, we recommend you to skip the most time-consuming step 2, and perform the reconstruction with these already trained trees. The default experiment settings perform x3 super-resolution with input patch 5x5x5. Reconstruction should take under 10 minutes for each subject with 8 trees. 
 
-`test.m` automatically visualises the mean diffusivity, fractional anisotropy and colour encoded directional map for the low-res input, the predicted high-res and the ground truth, and saves as a FIG file. For example, 
+`test.m` automatically visualises the mean diffusivity (MD), fractional anisotropy (FA) and colour encoded directional map (CFA) for the low-res input, the predicted high-res and the ground truth, and saves as a FIG file. If you have 
 ![DTI_SR_3x3x3_3x3x3](https://cloud.githubusercontent.com/assets/14926992/24544089/e2e18f72-15f9-11e7-8f7c-0488a8b197aa.png)
+This figure illustrates results of x3 super-resolution with 3x3x3 input patch on subject 117324. Note that no boundary completion was performed here. 
 
 ### Disclaimer
-0. The current version is limited to super-resolution of diffusion tensor images, although readily extendable to the MAP-MRI super-resolution or parameter mapping applications.
-0. Edge reconstruction can take a long time. It's best to try the pipeline first without this feature (makes sure the parameter settings.edge = 0)
+0. The current version is limited to super-resolution of diffusion tensor images. 
+0. Edge reconstruction can take a long time (~2 hours per subject). It's best to try the pipeline first without this feature (makes sure the parameter settings.edge = 0).
 
 ### Citation
 If you use this pipeline in your research, please cite:
