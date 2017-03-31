@@ -90,37 +90,38 @@ for dataid = 1:length(data_folders)
     cfa_hr2(:,:,3) = flipud(cfa_hr(:,:,3)');
     
     % Plot:
+    margin = [0.02,0.02]
     fig=figure; 
-    subplot_tight(3,3,1,[0.03,0.01])
+    subplot_tight(3,3,1,margin)
     imshow(md_lr,[]);
     title('Low-res input')
     ylabel('MD')
-    subplot_tight(3,3,2,[0.03,0.01])
+    subplot_tight(3,3,2,margin)
     imshow(md_est,[]);
     title('IQT-RF outut')
-    subplot_tight(3,3,3,[0.03,0.01])
+    subplot_tight(3,3,3,margin)
     imshow(md_hr,[]);
     title('Ground truth high-res')
     
-    subplot_tight(3,3,4,[0.03,0.01])
+    subplot_tight(3,3,4,margin)
     imshow(cfa_lr2,[]);
     ylabel('CFA')
-    subplot_tight(3,3,5,[0.03,0.01])
+    subplot_tight(3,3,5,margin)
     imshow(cfa_est2,[]);
-    subplot_tight(3,3,6,[0.03,0.01])
+    subplot_tight(3,3,6,margin)
     imshow(cfa_hr2,[]);
     
-    subplot_tight(3,3,7,[0.03,0.01])
+    subplot_tight(3,3,7,margin)
     imshow(fa_lr,[]);
     ylabel('FA')
-    subplot_tight(3,3,8,[0.03,0.01])
+    subplot_tight(3,3,8,margin)
     imshow(fa_est,[]);
-    subplot_tight(3,3,9,[0.03,0.01])
+    subplot_tight(3,3,9,margin)
     imshow(fa_hr,[]);
     
-    %Save as a png.
+    %Save as a .fig file.
     disp('Save tbe figure as a PNG file:')
-    filename = [output_folder '/' output_subdir '/image.png'];
+    filename = [output_folder '/' output_subdir '/image.fig'];
     disp(['see ' filename])
     saveas(fig,filename)
 end
