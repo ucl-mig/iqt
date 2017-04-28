@@ -1,7 +1,7 @@
 # Image Quality Transfer
 
 ### Demo
-[![Alt text](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be)
+[![Alt text](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be){:target="_blank"}
 
 ### Table of Contents
 0. [Introduction](#introduction)
