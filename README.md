@@ -1,9 +1,9 @@
 # Image Quality Transfer
 
 ### Demo
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=_738lFAZSUk
-" target="_blank"><img src="http://img.youtube.com/vi/_738lFAZSUk/0.jpg" 
-alt="IQT Demo" width="240" height="180" border="10" /></a>
+# <a href="http://www.youtube.com/watch?feature=player_embedded&v=_738lFAZSUk
+# " target="_blank"><img src="http://img.youtube.com/vi/_738lFAZSUk/0.jpg" 
+# alt="IQT Demo" width="240" height="180" border="10" /></a>
 [![IQT Demo](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be)
 
 ### Table of Contents
