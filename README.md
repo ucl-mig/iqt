@@ -1,11 +1,5 @@
 # Image Quality Transfer
 
-### Demo
-# <a href="http://www.youtube.com/watch?feature=player_embedded&v=_738lFAZSUk
-# " target="_blank"><img src="http://img.youtube.com/vi/_738lFAZSUk/0.jpg" 
-# alt="IQT Demo" width="240" height="180" border="10" /></a>
-[![IQT Demo](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be)
-
 ### Table of Contents
 0. [Introduction](#introduction)
 0. [Data](#data)
@@ -50,6 +44,9 @@ If you use this pipeline in your research, please cite:
         year={2017},
         publisher={Elsevier}
       }
+
+### Demo
+[![IQT Demo](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be)
 
 ### Disclaimer
 0. The current version is limited to super-resolution of diffusion tensor images. 
