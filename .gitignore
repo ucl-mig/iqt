@@ -1,3 +1,4 @@
 ./matlab/trees/*
 .DS_Store
 *.m~
+*.swp
