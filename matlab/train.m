@@ -1,3 +1,17 @@
+% TRAIN  A script that trains random forest trees from training data that has
+%   been prepared from a typical HCP dataset.
+%
+%   This is a script, you have to edit the 'settings'.
+% 
+%   TODO
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
+
 %% Train trees:
 
 %Define parameters (default values below):

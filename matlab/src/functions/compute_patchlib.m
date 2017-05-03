@@ -1,31 +1,47 @@
-%% Extract patches from the low-res/high-res DT images.
-% We create exhaustive list of all valid patch pairs and store them 
-%in a large matrix.
+function compute_patchlib(input_dir, output_dir, data_folders, ...
+                          sub_path, mask_file, dt_pref, ds_rate, ...
+                          input_radius, settings)
+% COMPUTE_PATCHLIB extracts patch-pairs from low/high resolution DTIs
+%   to create an exhaustive list of all valid patch-pairs and stores them
+%   in a large matrix.
+%
+%   Args:
+%       INPUT_DIR: Input root folder (eg HCP root)
+%       OUTPUT_DIR: Output root folder (could be HCP root)
+%       DATA_FOLDERS: Subjects to process (eg HCP subjects)
+%       SUB_PATH: Input/Output data access is done as:
+%                  input_dir/data_folder/sub_path/file_name
+%                  output_dir/data_folder/sub_path/file_name
+%       MASK_FILE: mask file
+%       DT_PREF: DTI file prefix
+%       DS_RATE: Super-resolution factor
+%       INPUT_RADIUS: the input is a cubic patch of size (2*INPUT_RADIUS+1)^3
+%
+%   (always end directory paths with a forward/back slash)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
-function compute_patchlib(input_dir, output_dir, data_folders, settings)
-
-% Fetch the parameters:
-dt_name = settings.dt_name;
-ds = settings.upsample_rate; % downsampling rate
-input_radius = settings.input_radius; % the radius of the low-res patch. 
-output_radius = ds;
+ds = ds_rate; % downsampling rate
 
 % compute patch libaries sequentiatlly for all subjects.
-for fi = 1:length(data_folders)
-    if(~exist([output_dir '/'  data_folders{fi} ]))
-        mkdir([output_dir '/'  data_folders{fi} ]);
+parfor fi = 1:length(data_folders)
+    if(~exist([output_dir data_folders{fi}  '/' sub_path], 'dir'))
+        mkdir(output_dir, [data_folders{fi}  '/' sub_path]);
     end
    
-    input_folder = [input_dir '/' data_folders{fi}];
-    output_folder = [output_dir '/' data_folders{fi}];
-    
-    disp( ' ' );
-    disp( [ 'Creating a patch library from: ' data_folders{fi} ] );
-    disp( ' ' );
+    fprintf('Creating a patch library from: %s\n', data_folders{fi});
+    input_folder = [input_dir data_folders{fi} '/' sub_path];
+    output_folder = [input_dir data_folders{fi} '/' sub_path];
 
     % The downsampling factor for the input.
-    disp(sprintf('Downsampling rate of : %i', ds));
-    dt_lowres_name = sprintf('%slowres_%i_', dt_name, ds);
+    fprintf('Downsampling rate of : %i\n', ds);
+    dt_lowres_name = sprintf('%slowres_%i_', dt_pref, ds);
     
     % radius of low-res neighbourhood;
     
@@ -36,13 +52,13 @@ for fi = 1:length(data_folders)
     % in the high-res space.
     % background (-1) or brain (0) voxels in the mask.
     
-    disp(sprintf(['Computing locations of valid patch pairs: '...
-                  'input(%ix%ix%i)  =>  output(%ix%ix%i)'],...
+    fprintf(['Computing locations of valid patch pairs: '...
+                  'input(%ix%ix%i)  =>  output(%ix%ix%i) (%s)\n'],...
         2*input_radius+1,2*input_radius+1,2*input_radius+1,...
-        ds,ds,ds));
+        ds,ds,ds, data_folders{fi});
     
     % load the DT brain mask: 
-    [mask, elsp] = read_std_nii([ input_folder '/' dt_name '1.nii' ]);
+    [mask, hdr] = read_std_nii([ input_folder dt_pref '1.nii' ]);
     dim1 = size(mask,1); dim2 = size(mask,2); dim3 = size(mask,3);
     
     mask_hr_valid_blocks_for_rec = mask*0;
@@ -72,7 +88,7 @@ for fi = 1:length(data_folders)
     
     % Save the indices (not neccesary).
     indices_patchlib_to_volume = indices_valid_features;
-    save([output_folder '/' sprintf('indices_patchlib_to_volumeDS%02i_N%02i',...
+    save([output_folder sprintf('indices_patchlib_to_volumeDS%02i_N%02i',...
           ds, input_radius) ], 'indices_patchlib_to_volume' );
 
     % ------------ Extract patches from low-res DTI (input) --------------
@@ -81,7 +97,7 @@ for fi = 1:length(data_folders)
     % Each patch is of size (2*input_radius+1)^3*6
     % Save as a mat file.
     
-    disp('creating patch library LOW-RES...')
+    fprintf('creating patch library LOW-RES... (%s)\n', data_folders{fi});
     dt_lr = zeros( dim1 , dim2 , dim3 , 6 );
     for i=1:6
         dt_lr(:,:,:,i) = read_std_nii(...
@@ -109,7 +125,7 @@ for fi = 1:length(data_folders)
     disp('done.')
 
     disp('saving patch library...')
-    save([output_folder '/' ...
+    save([output_folder ...
           sprintf('ipatchlibDS%02i_N%02i', ds, input_radius)], ...
           'ipatchlib', '-v7.3');
     disp('done.')
@@ -119,13 +135,13 @@ for fi = 1:length(data_folders)
     
     % ------------ Extract patches from high-res DTI (output) -------------    
     % Each high-res patch is of size ds^3*6
-    disp('creating patch library HIGH-RES...')
+    disp('creating patch library HIGH-RES... (%s)\n', data_folders{fi});
     dt = zeros( dim1 , dim2 , dim3 , 6 );
     
     % load the high-res dti
     for i=1:6
-        dt(:,:,:,i) = read_std_nii([input_folder '/' ...
-                                    dt_name num2str(i+2), '.nii' ]);
+        dt(:,:,:,i) = read_std_nii([input_folder ...
+                                    dt_pref num2str(i+2), '.nii' ]);
     end
     
     % Define the input patch library.
@@ -143,7 +159,7 @@ for fi = 1:length(data_folders)
     disp('done.')
 
     disp('saving patch library...')
-    save([output_folder '/' ...
+    save([output_folder ...
          sprintf('opatchlibDS%02i_N%02i_M%02i', ds, input_radius, ds)],...
          'opatchlib', '-v7.3' );
     disp('done.')

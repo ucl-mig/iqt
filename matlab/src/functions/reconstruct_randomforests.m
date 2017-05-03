@@ -46,7 +46,7 @@ for dataid = 1:length(data_folders)
     % original res
     file_orig = [input_dir '/' data_folders{dataid} '/' dt_name];
     dth = ReadDT_Volume(file_orig);
-    [x_h, y_h, z_h, junk] = size(dth);
+    [x_h, y_h, z_h, ~] = size(dth);
     clear dth
     
     % low-res:

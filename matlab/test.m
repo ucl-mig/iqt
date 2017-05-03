@@ -1,4 +1,18 @@
-%% Reconstruction:
+% TEST  A script that uses pretrained trees that are provided with
+%   the codebase to reconstruct typical HCP low resolution DTI.
+%
+%   This is a script, you have to edit the 'settings'.
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
+
+%% Settings
+addpath(genpath('.'));
 
 %Header of DT images.
 settings.dt_name = 'dt_b1000_';
@@ -22,9 +36,13 @@ settings.trees_list = [1:8]; % indices of trees included in the forest.
 settings.patchlibs_dir = '/dir/where/training/patch-libs/are/stored';
 data_folders = {'subject_1','subject_2','subject_3'}; % list of sub-dirs.
 
+
+%% Reconstruction
 % Perform super-resolution: 
 reconstruct_randomforests(data_folders, settings)
 
+
+%% Visualisation
 % Visualise the MD/FA/CFA ans save the figure as a FIG file.
 visualise_results(data_folders, settings)
 
