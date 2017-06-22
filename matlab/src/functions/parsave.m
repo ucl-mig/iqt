@@ -7,7 +7,6 @@ function parsave(filename, var, optstr)
 % License: LICENSE
 % ---------------------------
 %
-
     if (nargin < 3)
     	optstr = '';
     end
