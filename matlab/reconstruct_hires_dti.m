@@ -1,4 +1,4 @@
-% COMPUTE_HIRES_DTI  A script to compute super-resolved DTI from the
+% RECONSTRUCT_HIRES_DTI  A script to compute super-resolved DTI from the
 %   pre-computed trees trained on HCP data (corresponding to the paper).
 %
 %   This is a script, you have to edit the 'settings'.
