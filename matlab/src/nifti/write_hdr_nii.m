@@ -1,4 +1,12 @@
 function write_hdr_nii(D,filename,hdr)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 nii = make_nii(D);
 nii.hdr.hist.qform_code = 0;

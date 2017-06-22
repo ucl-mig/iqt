@@ -1,6 +1,15 @@
 function [dtreconrf, forest_accum] = ForestSuperResEdge(dt_lowres, trees, n, m, patch_feature_map, us, T, comipatchmean, rescale_factor, scale_const, overlap)
 % dtreconrf: estimated high-res dti
 % forest_accum: average precision of the prediction over all trees
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
+
 for i=1:length(trees)
      
     % Do the reconstruction

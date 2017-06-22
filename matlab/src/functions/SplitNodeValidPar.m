@@ -1,4 +1,12 @@
 function [pn, ln, rn, split_rel_error] = SplitNodeValidPar(parent_node, train_in, train_out, train_features, test_in, test_out, test_features, settings, features_list)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 if (nargin < 9)
     features_list = 1:size(train_features,2); %optimise over all features unless specified! 

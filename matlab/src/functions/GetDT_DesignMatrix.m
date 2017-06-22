@@ -1,4 +1,12 @@
 function X = GetDT_DesignMatrix(bvals, bvecs, L)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 % If no gradient non-linearity correction provided, just use the unaltered
 % b matrix.

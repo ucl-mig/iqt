@@ -1,6 +1,6 @@
 % COMPUTE_MODEL_DTI  A script to estimate DTI from DWIs.
 %   This script is useful for computing DTIs on your own datasets. These
-%   DTIs can then be super-resolved using the IQT code.
+%   DTIs can then be super-resolved using COMPUTE_HIRES_DTI.
 %
 %   This is a script, you have to edit the settings.
 % 
@@ -17,14 +17,14 @@
 addpath(genpath('.'));
 
 % Set paths (always end directory paths with a forward/back slash)
-inp_dir = ''; % dir where DWI data is stored (eg HCP data root)
-out_dir = inp_dir; % dir where DTIs will be saved (default input dir)
-% list of testing subjects
-data_folders = {'904044', '165840'}; 
+inp_dir = '/cs/research/vision/hcp/HCP/'; % dir where DWI data is stored (eg HCP data root)
+out_dir = '/cs/research/vision/hcp/Auro/iqt.github_test/';  % typically root dir where results are stored
+% list of test data subjects
+data_folders = {'904044', '165840'}; %, '889579', '713239', '899885', '117324', '214423', '857263'};
 
 % Check
-if strcmp(inp_dir, '')
-    error('[IQT] Input DWI data root missing, please check paths in settings.');
+if strcmp(inp_dir, '') || strcmp(out_dir, '')
+    error('[IQT] Input/Output root missing, please check paths in settings.');
 end
 
 % Optional settings
@@ -33,12 +33,17 @@ dw_file = 'data.nii'; % DWI file
 bvals_file = 'bvals'; % b-values file
 bvecs_file = 'bvecs'; % b-vectors file
 mask_file = 'nodif_brain_mask.nii'; % mask file
-grad_file = ''; % gradient non-linearities (HCP only: grad_dev.nii)
-                            % For non-HCP: grad_file = ''
 dt_pref = 'dt_b1000_'; % DTI name prefix
+
+
+%%
+open_matlabpool();
 
 
 %% Estimation
 compute_dti(inp_dir, out_dir, data_folders, sub_path, ...
-            dw_file, bvals_file, bvecs_file, mask_file, grad_file, ...
+            dw_file, bvals_file, bvecs_file, mask_file, ...
             dt_pref);
+        
+%%        
+close_matlabpool();

@@ -10,6 +10,14 @@ function fts = PatchFeaturesV4(patch)
 % 14:16 Mean eigenvalues over full patch
 % 17:19 Mean principal direction over full patch
 % 20 Orientation dispersion over full patch
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 ps=floor((length(patch)/6)^(1/3)+0.001);
 rpatch = reshape(patch, [ps,ps,ps,6]);

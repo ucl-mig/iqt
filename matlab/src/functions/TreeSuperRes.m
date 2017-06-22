@@ -1,4 +1,12 @@
-function [dtrecon, accum, accum_var, leafmap, mdistmap] = rt_RegressionTreeSuperResOverlap(dt_lowres, tree, n, m, patch_feature_map, us, overlap, rescale_factor,  max_layer,  scale_const, input_patch_scaling, output_patch_scaling)
+function [dtrecon, accum, accum_var, leafmap, mdistmap] = TreeSuperRes(dt_lowres, tree, n, m, patch_feature_map, us, overlap, rescale_factor,  max_layer,  scale_const, input_patch_scaling, output_patch_scaling)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 if(nargin<7)
     overlap = 'ignore';

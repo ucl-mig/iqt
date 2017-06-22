@@ -1,4 +1,12 @@
 % Remove some unnecessary data from the tree. 
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 function tree = strip_tree(tree)
 
     for idx = 1:length(tree)

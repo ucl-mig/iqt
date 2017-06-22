@@ -7,7 +7,7 @@ function compute_dti_respairs(input_dir, output_dir, data_folders, sub_path, ...
 %
 %   Args: 
 %       INPUT_DIR: Input root folder (eg HCP root)
-%       OUTPUT_DIR: Output root folder (could be HCP root)
+%       OUTPUT_DIR: Output root folder
 %       DATA_FOLDERS: Subjects to process (eg HCP subjects)
 %       SUB_PATH: Input/Output data access is done as:
 %                  input_dir/data_folder/sub_path/file_name
@@ -30,6 +30,9 @@ function compute_dti_respairs(input_dir, output_dir, data_folders, sub_path, ...
 % ---------------------------
 %
 
+check_path(input_dir);
+check_path(output_dir);
+check_path(sub_path);
 
 parfor fi = 1:length(data_folders)
     if(~exist([output_dir data_folders{fi}  '/' sub_path], 'dir'))
@@ -39,29 +42,29 @@ parfor fi = 1:length(data_folders)
     % -------- Step 1: Compute DTI for the original high-res DWI ---------
     fprintf('DTI computation subject: %s\n', data_folders{fi});
     input_folder = [input_dir data_folders{fi} '/' sub_path];
-    output_folder = [input_dir data_folders{fi} '/' sub_path];
+    output_folder = [output_dir data_folders{fi} '/' sub_path];
     
     % Read in the DWI data
-    fprintf('Loading DWI: %s\n', dw_file);
+    fprintf('Loading DWI: %s (%s)\n', dw_file, data_folders{fi});
     tmp = load_nii( [input_folder dw_file] );
     dw = flipdim(tmp.img,1);
     [XSIZE,YSIZE,ZSIZE,~] = size(dw);
     hdr = tmp.hdr;
     
     % Read bvals and bvecs text files
-    fprintf('Loading bvals/bvecs: %s, %s\n', bvals_file, bvecs_file);
-    bvecs = load([input_folder bvals_file]); % should be 3xN
-    bvals = load([input_folder bvecs_file]); % should be 1xN
+    fprintf('Loading bvals/bvecs: %s, %s (%s)\n', bvals_file, bvecs_file, data_folders{fi});
+    bvecs = load([input_folder bvecs_file]); % should be 3xN
+    bvals = load([input_folder bvals_file]); % should be 1xN
 
     % Read the brain mask
-    fprintf('Loading mask: %s\n', mask_file);
+    fprintf('Loading mask: %s (%s)\n', mask_file, data_folders{fi});
     tmp = load_nii( [input_folder '/' mask_file] );
     mask = flipdim(tmp.img,1);
 
     % Read gradient nonlinearity file and qform (HCP only).
     g = [];
     if ~strcmp(grad_file, '')
-        fprintf('Loading grad-nonlinearity: %s\n', grad_file);
+        fprintf('Loading grad-nonlinearity: %s (%s)\n', grad_file, data_folders{fi});
         tmp = load_nii( [input_folder '/' grad_file] );
         g = flipdim(tmp.img,1);
     end
@@ -187,7 +190,7 @@ parfor fi = 1:length(data_folders)
     dtl_mask_invalid_tensors = zeros(XSIZE,YSIZE,ZSIZE);
 
     for k=1:(ZSIZE-ds_rate+1)
-        display(sprintf('Slice %i of %i (%i) ds=%i.', k, ZSIZE, fi, ds_rate));
+        display(sprintf('Slice %i of %i (%s) ds=%i.', k, ZSIZE, data_folders{fi}, ds_rate));
         for j=1:(YSIZE-ds_rate+1)
             for i=1:(XSIZE-ds_rate+1)
                 % We consider here the block of dsxdsxds with i,j,k at the corner.

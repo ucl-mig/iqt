@@ -17,6 +17,14 @@
 %   - Tensor linearity (E1-E2)/E1.
 %   - Tensor planarity (E2-E3)/E1.
 %   - Tensor isotropy E3/E1.
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 function fts = PatchFeaturesLog(patch)
 
 p=3;

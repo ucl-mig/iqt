@@ -1,4 +1,12 @@
 function [pn, ln, rn] = SplitNodeOptGivenFeature(parent_node, train_in, train_out, train_features, feature_ind, settings)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 % Don't use all the training data for finding the split if the training set
 % it large.  pn is a temporary version of parent_node with a subsampled set

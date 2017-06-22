@@ -1,14 +1,37 @@
-function train_trees(input_dir, output_dir, settings)
+function train_trees(train_dir, ds_rate, input_radius, ...
+                     sample_rate, no_rnds, fv)
+% TRAIN_TREES is actual function that trains random forest trees from the
+%   data available in the train_dir directory.
+%
+%   Args:
+%       TRAIN_DIR: This directory which contains all training outputs
+%       DS_RATE: Super-resolution factor
+%       INPUT_RADIUS: the input is a cubic patch of size (2*INPUT_RADIUS+1)^3
+%       SAMPLE_RATE: data sampling rate for random sub-sampling
+%       NO_RNDS: number of random sub-samples to create these many training
+%                datasets
+%       FV: feature version used for computing features for tree training
+%
+%   (always end directory paths with a forward/back slash)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 %% Define variables and display for checking
 % Patch size (input patch radius). (!) Duplication. Remove
-settings.n=settings.input_radius; 
+settings.n=input_radius; 
 % Downsampling factor 
-settings.ds=settings.upsample_rate;
+settings.ds=ds_rate;
 % Output patch radius.
 settings.m=settings.ds;
 % Version of feature set
-settings.fv=settings.feature_version;
+settings.fv=fv;
+settings.sample_rate=sample_rate;
 % Don't include spatial locations in the feature list.
 settings.spatial=0;
 % Type of tree truncation
@@ -47,21 +70,21 @@ disp(settings)
 
 %% Get the list of training sets
 TrainingDataFiles = {};
-for si = 1:settings.no_rnds
+for si = 1:no_rnds
     TrainingDataFiles{end+1} = sprintf('_DS%02i_%ix%ix%i_%ix%ix%i_Sub%03i_%04i.mat', ...
-    settings.ds, 2*settings.n+1,2*settings.n+1,2*settings.n+1, settings.m, settings.m, settings.m, settings.subsample_rate, si);
+    settings.ds, 2*settings.n+1,2*settings.n+1,2*settings.n+1, settings.m, settings.m, settings.m, settings.sample_rate, si);
 end
 
 
 %% Train trees.
 % loop over training data sets.
 for tfi=1:length(TrainingDataFiles)
-    display(sprintf('Training tree %i/%i', tfi, length(TrainingDataFiles)))
-    display(['on dataset: PatchLibs' TrainingDataFiles{tfi}])
-    load([input_dir '/PatchLibs' TrainingDataFiles{tfi}])
+    fprintf('Training tree %i/%i\n', tfi, length(TrainingDataFiles));
+    fprintf('on dataset: PatchLibs%s\n', TrainingDataFiles{tfi});
+    load([train_dir '/PatchLibs' TrainingDataFiles{tfi}])
 
     % Compute candidate split features.
-    FeatureFileName = [input_dir '/FeaturesV' int2str(settings.fv) TrainingDataFiles{tfi}];
+    FeatureFileName = [train_dir '/FeaturesV' int2str(settings.fv) TrainingDataFiles{tfi}];
     if(~exist(FeatureFileName, 'file'))
         display('Computing features...')
         tic;
@@ -179,12 +202,12 @@ for tfi=1:length(TrainingDataFiles)
     toc
     
     % Save the tree:
-    if(~exist(output_dir))
-        mkdir(output_dir);
+    if ~exist(train_dir, 'dir')
+        mkdir(train_dir);
     end
     display('Saving the tree ...')
     tree = strip_tree(tree);
-    save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'settings');
+    save([train_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'settings');
     %save([output_dir '/RegTreeValV' int2str(settings.fv) TrainingDataFiles{tfi}], 'tree', 'train_inds', 'settings');
     fprintf('\n')
 end

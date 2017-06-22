@@ -1,74 +1,116 @@
-function visualise_results(data_folders, settings)
+function visualise_results(hires_dir, lowres_dir, recon_dir, ...
+                           data_folders, sub_path, dt_pref, ...
+                           ds_rate, no_rnds, sample_rate, ...
+                           input_radius, fv, edge_recon, ...
+                           flip_dim)
+% RECONSTRUCT_RANDOMFORESTS
+%   Computes IQT super-resolution DTI from the input DTI (low-resolution).
+%
+%   Args: 
+%       HIRES_DIR: Input root dir of hi-res DTI (='' if not available)
+%       LOWRES_DIR: Output root dir of low-res DTI
+%       RECON_DIR: Root dir containing the RF reconstructed DTI
+%       DATA_FOLDERS: Subjects to process (eg HCP subjects)
+%       SUB_PATH: Input/Output data access is done as:
+%                  input_dir/data_folder/sub_path/file_name
+%                  output_dir/data_folder/sub_path/file_name
+%       DT_PREF: DTI output prefix
+%       DS_RATE: Super-resolution factor
+%       NO_RNDS: number of trees in the RF
+%       SAMPLE_RATE: data sampling rate for random sub-sampling
+%       INPUT_RADIUS: the input is a cubic patch of size (2*INPUT_RADIUS+1)^3
+%       FV: feature version used for computing features for tree training
+%       EDGE_RECON: flag that indicates whether to reconstructs edge or not
+%                   (edge reconstruction is slow!)
+%       FLIP_DIM (optional): The internal IQT code flips all images along 
+%                            axis-1, due to historic reasons. But this 
+%                            should not be the case for user data. 
+%                            Normally, this flag should be off (default 0).
+%
+%   (always end directory paths with a forward/back slash)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
-%% Configurations:
-% Paths:
-input_dir = settings.input_dir;
-output_dir = settings.output_dir;
-trees_dir = settings.trees_dir;
-trees_list = settings.trees_list;
-patchlibs_dir = settings.patchlibs_dir;
-dt_name = settings.dt_name;
+check_path(hires_dir);
+check_path(lowres_dir);
+check_path(recon_dir);
+check_path(sub_path);
+
 rescale_factor = 1.0;
 scale_const = 1E-3;
 
-% Data:
-subsample_rate=settings.subsample_rate;
-fv=settings.feature_version;
-
-% Problem:
-ds=settings.upsample_rate;
-n=settings.input_radius;
+ds=ds_rate;
+n=input_radius;
 m=ds;
-edge_recon = settings.edge; % true if you want to reconstruct on the edge
-tail_name = sprintf('DS%02i_%ix%ix%i_%ix%ix%i_Sub%03i', ds, 2*n+1,2*n+1,2*n+1, m, m, m, subsample_rate)
-tree_name = ['RegTreeValV' int2str(fv) '_' tail_name '_'];
-
-trees={}; 
-for k= 1:length(trees_list)
-    tmp=load(sprintf([trees_dir '/' tree_name '%04i.mat'], trees_list(k)));
-    trees{k} = tmp.tree;
-end
+trees_list = 1:no_rnds;
+tail_name = sprintf('DS%02i_%ix%ix%i_%ix%ix%i_Sub%03i', ds, 2*n+1,2*n+1,2*n+1, m, m, m, sample_rate);
 
 if edge_recon % Reconstruct on the boundary.
    % reconstruct and save the estimated DTI and precision map:
-   output_subdir  = sprintf(['RF_Edge_V' int2str(fv) '_NoTree%02i_' tail_name], length(trees_list));
+   output_subdir  = sprintf(['RF_Edge_V' int2str(fv) '_NoTree%02i_' tail_name '/'], length(trees_list));
 else
    % reconstruct and save the estimated DTI and precision map:
-   output_subdir  = sprintf(['RF_V' int2str(fv) '_NoTree%02i_' tail_name], length(trees_list));
+   output_subdir  = sprintf(['RF_V' int2str(fv) '_NoTree%02i_' tail_name '/'], length(trees_list));
 end
 
+if ~exist('flip_dim', 'var')
+    flip_dim = 0;
+end
 
-
-%% Load low-res, high-res, estimate
+% Load low-res, high-res, estimate
 for dataid = 1:length(data_folders)
-    display(sprintf(['\nReconstructing: ' data_folders{dataid} '\n']))
-    output_folder = [output_dir '/' data_folders{dataid}];
-    if(~exist(output_folder))
-        mkdir(output_folder);
-    end
+    fprintf(['\nVisualising: ' data_folders{dataid} '\n']);
+    hires_folder  = [hires_dir data_folders{dataid} '/' sub_path];
+    lowres_folder = [lowres_dir data_folders{dataid} '/' sub_path];
+    recon_folder  = [recon_dir data_folders{dataid} '/' sub_path output_subdir];
     
     % Load the data:
-    file_orig = [input_dir '/' data_folders{dataid} '/' dt_name];
-    dt_hr = ReadDT_Volume(file_orig);
+    fprintf('Loading low-res DTI...\n');
+    file_low = [ lowres_folder dt_pref sprintf('lowres_%i_', ds)];
+    dt_lr = ReadDT_Volume(file_low);
+    if flip_dim>0
+        dt_lr = dt_lr(1:ds:end,1:ds:end,1:ds:end,:);
+    end
     
-    file_est = [output_folder '/' output_subdir '/dt_recon_']
+    fprintf('Loading reconstructed DTI...\n');
+    file_est = [recon_folder dt_pref 'recon_'];
     dt_est = ReadDT_Volume(file_est);
     
-    file_low = [ input_dir '/' data_folders{dataid} '/' dt_name sprintf('lowres_%i_', ds)];
-    dt_lr = ReadDT_Volume(file_low);
-    dt_lr = dt_lr(1:ds:end,1:ds:end,1:ds:end,:);
-    
+    file_orig = [hires_folder dt_pref];
+    if strcmp(hires_dir, '')
+        dt_hr = [];
+    else
+        fprintf('Loading hi-res DTI...\n');
+        dt_hr = ReadDT_Volume(file_orig);
+    end
+        
     % Take a slice, and compute MD, FA, CFA.
-    slice_region = '(:,:,70,:)';
-    slice_region_lr = '(:,:,round(70/ds),:)';
+    zN = round(size(dt_est, 3)/2);
+    fprintf('Taking z-slice %i\n', zN);
+    slice_est = dt_est(:,:,zN,:); dt_est = [];
+    slice_lr  = dt_lr(:,:,round(zN/ds),:); dt_lr = [];
+    if ~isempty(dt_hr)
+        slice_hr= dt_hr(:,:,zN,:); dt_hr = [];
+    else
+        slice_hr = [];
+    end
     
-    slice_lr=eval(['dt_lr' slice_region_lr]); dt_lr=[];
-    slice_est=eval(['dt_est' slice_region]); dt_est=[]; 
-    slice_hr=eval(['dt_hr' slice_region]); dt_hr=[];
-    
+    fprintf('Computing MD/FA/CFA ...\n');
     [md_lr, fa_lr, cfa_lr] = compute_MD_FA_CFA(slice_lr);
     [md_est, fa_est, cfa_est] = compute_MD_FA_CFA(slice_est);
-    [md_hr, fa_hr, cfa_hr] = compute_MD_FA_CFA(slice_hr);
+    if ~isempty(slice_hr)
+        [md_hr, fa_hr, cfa_hr] = compute_MD_FA_CFA(slice_hr);
+    else
+        md_hr = single(zeros(size(md_est)));
+        fa_hr = single(zeros(size(fa_est)));
+        cfa_hr = single(zeros(size(cfa_est)));
+    end
     
     % Flip:
     md_lr = flipud(md_lr');
@@ -120,8 +162,8 @@ for dataid = 1:length(data_folders)
     imshow(fa_hr,[]);
     
     %Save as a .fig file.
-    disp('Save tbe figure as a PNG file:')
-    filename = [output_folder '/' output_subdir '/image.fig'];
+    disp('Save the figure as a FIG file:')
+    filename = [recon_folder 'image.fig'];
     disp(['see ' filename])
     saveas(fig,filename)
 end

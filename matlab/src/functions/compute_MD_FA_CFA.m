@@ -1,10 +1,18 @@
 function [md, fa, cfa ] = compute_MD_FA_CFA(dt)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 [XSIZE, YSIZE, ZSIZE, junk] = size(dt);
 md = zeros(XSIZE,YSIZE,ZSIZE);
 fa = zeros(XSIZE,YSIZE,ZSIZE);
 cfa = zeros(XSIZE,YSIZE,ZSIZE,3);
-for i=1:XSIZE
+parfor i=1:XSIZE
     for j=1:YSIZE
         for k=1:ZSIZE
             if(dt(i,j,k,3)>0)

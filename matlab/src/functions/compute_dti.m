@@ -1,6 +1,6 @@
 function compute_dti(input_dir, output_dir, data_folders, sub_path, ...
-                     dw_file, bvals_file, bvecs_file, mask_file, grad_file, ...
-                     dt_pref)
+                     dw_file, bvals_file, bvecs_file, mask_file, ...
+                     dt_pref, b_max, b0_thresh)
 % COMPUTE_DTI
 %   Computes DTIs on the DWIs.
 %
@@ -15,8 +15,9 @@ function compute_dti(input_dir, output_dir, data_folders, sub_path, ...
 %       BVALS_FILE: b-values file
 %       BVECS_FILE: b-vectors file
 %       MASK_FILE: mask file
-%       GRAD_FILE: grad file for HCP data (otherwise = '')
 %       DT_PREF: DTI output prefix
+%       B_MAX: max b-value to use for DTI estimation (default 1500)
+%       B0_THRESH: b-value smaller than this is considered b0 (default 100)
 %
 %   (always end directory paths with a forward/back slash)
 % 
@@ -28,6 +29,16 @@ function compute_dti(input_dir, output_dir, data_folders, sub_path, ...
 % ---------------------------
 %
 
+check_path(input_dir);
+check_path(output_dir);
+check_path(sub_path);
+
+if ~exist('b_max', 'var')
+    b_max = 1500;
+end
+if ~exist('b0_thresh', 'var')
+    b0_thresh = 100;
+end
 
 parfor fi = 1:length(data_folders)
     if(~exist([output_dir data_folders{fi}  '/' sub_path], 'dir'))
@@ -36,42 +47,34 @@ parfor fi = 1:length(data_folders)
     
     fprintf('DTI computation subject: %s\n', data_folders{fi});
     input_folder = [input_dir data_folders{fi} '/' sub_path];
-    output_folder = [input_dir data_folders{fi} '/' sub_path];
+    output_folder = [output_dir data_folders{fi} '/' sub_path];
     
     % Read in the DWI data
-    fprintf('Loading DWI: %s\n', dw_file);
-    tmp = load_nii( [input_folder dw_file] );
-    dw = flipdim(tmp.img,1);
+    fprintf('Loading DWI: %s (%s)\n', dw_file, data_folders{fi});
+    nii = load_nii( [input_folder dw_file] );
+    dw = nii.img;
     [XSIZE,YSIZE,ZSIZE,~] = size(dw);
-    hdr = tmp.hdr;
+    hdr = nii.hdr;
     
     % Read bvals and bvecs text files
-    fprintf('Loading bvals/bvecs: %s, %s\n', bvals_file, bvecs_file);
-    bvecs = load([input_folder bvals_file]); % should be 3xN
-    bvals = load([input_folder bvecs_file]); % should be 1xN
+    fprintf('Loading bvals/bvecs: %s, %s (%s)\n', bvals_file, bvecs_file, data_folders{fi});
+    bvecs = load([input_folder bvecs_file]); % should be 3xN
+    bvals = load([input_folder bvals_file]); % should be 1xN
 
     % Read the brain mask
-    fprintf('Loading mask: %s\n', mask_file);
-    tmp = load_nii( [input_folder '/' mask_file] );
-    mask = flipdim(tmp.img,1);
-
-    % Read gradient nonlinearity file and qform (HCP only).
-    if ~strcmp(grad_file, '')
-        fprintf('Loading grad-nonlinearity: %s\n', grad_file);
-        tmp = load_nii( [input_folder '/' grad_file] );
-        g = flipdim(tmp.img,1);
-    end
-    tmp = []; % clear to run within parfor.
+    fprintf('Loading mask: %s (%s)\n', mask_file, data_folders{fi});
+    nii = load_nii( [input_folder mask_file] );
+    mask = nii.img;
+    nii = []; % clear to run within parfor.
 
     % Here we want to fit only to the inner, b=1000, shell as well as b=0
     % images.
-    dw_inds = find(bvals<1500);
+    dw_inds = find(bvals<b_max);
     bvals = bvals(dw_inds);
     bvecs = bvecs(:,dw_inds);
     dw = dw(:,:,:,dw_inds);
 
     % Identify b=0 indices
-    b0_thresh = 100;
     b0_inds = find(bvals<b0_thresh);
 
     % Compute DTIs.
@@ -166,7 +169,6 @@ parfor fi = 1:length(data_folders)
     end
 
     % Save each DT component as a separate nifti file.
-%     dt = flipdim(dt, 1);
     for i=1:8
         write_hdr_nii(dt(:,:,:,i),...
                       [output_folder dt_pref num2str(i)], hdr);

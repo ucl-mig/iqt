@@ -1,4 +1,12 @@
 function dtreconrf = ForestSuperResCovW_Av(dt_lowres, trees, n, m, patch_feature_map, us, rescale_factor)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 if(nargin<7)
     rescale_factor = 1;

@@ -4,6 +4,14 @@ function Y = MeanDyadic(pds)
 %
 % The dyadic tensor is Y = 1/N \sum_i^N n_i n_i^T where n_i is the
 % i-th of N directions.
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 Y = zeros(3,3);
 for i=1:length(pds)

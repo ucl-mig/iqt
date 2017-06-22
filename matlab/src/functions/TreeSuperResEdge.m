@@ -1,4 +1,12 @@
-function [dtrecon, accum, leafmap, mx_hash] = rt_TreeSuperResEdge(dt_lowres, tree, n, m, patch_feature_map, us, T, comipatchmean, overlap, rescale_factor, scale_const, input_patch_scaling, output_patch_scaling, mx_hash)
+function [dtrecon, accum, leafmap, mx_hash] = TreeSuperResEdge(dt_lowres, tree, n, m, patch_feature_map, us, T, comipatchmean, overlap, rescale_factor, scale_const, input_patch_scaling, output_patch_scaling, mx_hash)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 if(nargin<9)
     overlap = 'ignore';

@@ -1,5 +1,6 @@
-% PREPROCESS  A script that creates training data for IQT random forest
+% TRAIN_PREPROCESS  A script that creates training data for IQT random forest
 %   training from a typical HCP dataset.
+%   Typical usage order: TRAIN_PREPROCESS, TRAIN_RF, TEST_RF (optional)
 %
 %   This is a script, you have to edit the 'settings'.
 % 
@@ -15,15 +16,15 @@
 addpath(genpath('.'));
 
 % Set paths (always end directory paths with a forward/back slash)
-dwi_dir = '~/Data/HCP/iqt_train/'; % dir where DWI data is stored (eg HCP data root)
-dti_dir = dwi_dir; % dir where DTIs will be saved (default input HCP dir)
-train_dir = [dwi_dir 'TrainingData/']; % dir where training sets will be saved
+inp_dir = '/cs/research/vision/hcp/HCP/'; % dir where DWI data is stored (eg HCP data root)
+out_dir = '/cs/research/vision/hcp/Auro/iqt.github_test/';  % typically root dir where results are stored
+train_dir = [out_dir 'TrainingData/']; % dir where training sets will be saved
 % list of training data subjects
 data_folders = {'992774', '125525'}; %, '205119', '133928', '570243', '448347', '654754', '153025'}; 
 
 % Check
-if strcmp(dwi_dir, '')
-    error('[IQT] Input DWI data root missing, please check paths in settings.');
+if strcmp(inp_dir, '') || strcmp(out_dir, '')
+    error('[IQT] Input/Output root missing, please check paths in settings.');
 end
 
 % Optional settings
@@ -41,12 +42,14 @@ input_radius = 2; % the radius of the low-res input patch i.e. the input is a cu
 datasample_rate = 32; % determines the size of training sets. From each subject, we randomly draw patches with probability 1/datasample_rate
 no_rnds = 8; % no of separate training sets to be created
 
+%%
+open_matlabpool();
 
         
 %% Step 1: model computation (e.g. DTI) from DWIs.
 % the high-res and low-res DTI are computed from the DWIs by artificially
 % downsampling. 
-compute_dti_respairs(dwi_dir, dti_dir, data_folders, sub_path, ...
+compute_dti_respairs(inp_dir, out_dir, data_folders, sub_path, ...
                      upsample_rate, dw_file, bvals_file, bvecs_file, ...
                      mask_file, grad_file, dt_pref);
 
@@ -54,7 +57,7 @@ compute_dti_respairs(dwi_dir, dti_dir, data_folders, sub_path, ...
 %% Step 2: create a library of low-res and high-res patches.
 % for each subject, the exhaustive list of all patch pairs are saved in a large
 % matrix.
-compute_patchlib(dti_dir, dti_dir, data_folders, sub_path, mask_file, ...
+compute_patchlib(out_dir, out_dir, data_folders, sub_path, ...
                  dt_pref, upsample_rate, input_radius);
 
 
@@ -63,4 +66,9 @@ compute_patchlib(dti_dir, dti_dir, data_folders, sub_path, mask_file, ...
 % pairs with probability 1/settings.subsample_rate.
 % repeat this process settings.no_rnds number of times to create the
 % specified number of separate trainign sets. 
-create_trainingset(dti_dir, traindata_dir, data_folders, settings)
+create_trainingset(out_dir, train_dir, data_folders, sub_path, ...
+                   datasample_rate, no_rnds, upsample_rate, input_radius);
+
+               
+%%
+close_matlabpool();

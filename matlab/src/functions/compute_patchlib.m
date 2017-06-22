@@ -1,6 +1,6 @@
 function compute_patchlib(input_dir, output_dir, data_folders, ...
-                          sub_path, mask_file, dt_pref, ds_rate, ...
-                          input_radius, settings)
+                          sub_path, dt_pref, ds_rate, ...
+                          input_radius)
 % COMPUTE_PATCHLIB extracts patch-pairs from low/high resolution DTIs
 %   to create an exhaustive list of all valid patch-pairs and stores them
 %   in a large matrix.
@@ -12,7 +12,6 @@ function compute_patchlib(input_dir, output_dir, data_folders, ...
 %       SUB_PATH: Input/Output data access is done as:
 %                  input_dir/data_folder/sub_path/file_name
 %                  output_dir/data_folder/sub_path/file_name
-%       MASK_FILE: mask file
 %       DT_PREF: DTI file prefix
 %       DS_RATE: Super-resolution factor
 %       INPUT_RADIUS: the input is a cubic patch of size (2*INPUT_RADIUS+1)^3
@@ -27,6 +26,9 @@ function compute_patchlib(input_dir, output_dir, data_folders, ...
 % ---------------------------
 %
 
+check_path(input_dir);
+check_path(output_dir);
+check_path(sub_path);
 ds = ds_rate; % downsampling rate
 
 % compute patch libaries sequentiatlly for all subjects.
@@ -37,10 +39,10 @@ parfor fi = 1:length(data_folders)
    
     fprintf('Creating a patch library from: %s\n', data_folders{fi});
     input_folder = [input_dir data_folders{fi} '/' sub_path];
-    output_folder = [input_dir data_folders{fi} '/' sub_path];
+    output_folder = [output_dir data_folders{fi} '/' sub_path];
 
     % The downsampling factor for the input.
-    fprintf('Downsampling rate of : %i\n', ds);
+    fprintf('Downsampling rate of : %i (%s)\n', ds, data_folders{fi});
     dt_lowres_name = sprintf('%slowres_%i_', dt_pref, ds);
     
     % radius of low-res neighbourhood;
@@ -64,7 +66,7 @@ parfor fi = 1:length(data_folders)
     mask_hr_valid_blocks_for_rec = mask*0;
     inds = find(mask==0);
     
-    tic()
+%     tic()
     for x=inds'
         
         [i,j,k] = ind2sub( [dim1,dim2,dim3] , x );
@@ -88,8 +90,8 @@ parfor fi = 1:length(data_folders)
     
     % Save the indices (not neccesary).
     indices_patchlib_to_volume = indices_valid_features;
-    save([output_folder sprintf('indices_patchlib_to_volumeDS%02i_N%02i',...
-          ds, input_radius) ], 'indices_patchlib_to_volume' );
+    parsave([output_folder sprintf('indices_patchlib_to_volumeDS%02i_N%02i',...
+          ds, input_radius) ], indices_patchlib_to_volume );
 
     % ------------ Extract patches from low-res DTI (input) --------------
     % Extract and rasterise all valid patches from low-res DTI, and put
@@ -122,20 +124,18 @@ parfor fi = 1:length(data_folders)
         ipatchlib(ind_i,:) = ipatch(:);
 
     end
-    disp('done.')
 
-    disp('saving patch library...')
-    save([output_folder ...
+    fprintf('saving input patch library... (%s)\n', data_folders{fi});
+    parsave([output_folder ...
           sprintf('ipatchlibDS%02i_N%02i', ds, input_radius)], ...
-          'ipatchlib', '-v7.3');
-    disp('done.')
+          ipatchlib, '-v7.3');
 
     ipatchlib = [];
     dt_lr = [];
     
     % ------------ Extract patches from high-res DTI (output) -------------    
     % Each high-res patch is of size ds^3*6
-    disp('creating patch library HIGH-RES... (%s)\n', data_folders{fi});
+    fprintf('creating patch library HIGH-RES... (%s)\n', data_folders{fi});
     dt = zeros( dim1 , dim2 , dim3 , 6 );
     
     % load the high-res dti
@@ -156,18 +156,17 @@ parfor fi = 1:length(data_folders)
         opatch = dt( i:i+ds-1 , j:j+ds-1 , k:k+ds-1 , : );
         opatchlib(ind_i,:) = opatch(:);
     end
-    disp('done.')
 
-    disp('saving patch library...')
-    save([output_folder ...
+    fprintf('saving output patch library... (%s)\n', data_folders{fi})
+    parsave([output_folder ...
          sprintf('opatchlibDS%02i_N%02i_M%02i', ds, input_radius, ds)],...
-         'opatchlib', '-v7.3' );
+         opatchlib, '-v7.3' );
     disp('done.')
 
     % clear for memory.
     opatchlib = [];
     dt = [];
 
-    disp([ 'duration: took ' num2str(toc) ' seconds.' ]);
+%     disp([ 'duration: took ' num2str(toc) ' seconds.' ]);
 end
     

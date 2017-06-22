@@ -15,6 +15,14 @@
 %   17-20 Tensor linearity (L1-L2)/L1.
 %   21-24 Tensor planarity (L2-L3)/L1.
 %   25-28 Tensor isotropy L3/L1.
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 function fts = PatchFeatures(patch)
 
 ps=floor((length(patch)/6)^(1/3)+0.001);

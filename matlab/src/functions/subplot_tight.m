@@ -19,6 +19,14 @@ function h=subplot_tight(m,n,p,margins,varargin)
 % Last update:      Nikolay S. 21/04/2011 (accourding to Alan B comment).
 %
 % Usage example: h=subplot_tight((2,3,1:2,[0.5,0.2])
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 if (nargin<4) || isempty(margins)
     margins=[0.01,0.01]; % default margins value- 1% of figure

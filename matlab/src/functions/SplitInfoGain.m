@@ -1,6 +1,14 @@
 % Computes the information gain from splitting a node on a particular
 % feature at a particular threshold and constructing linear mappings for
 % each subset instead of a linear mapping for all the data.
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 function [neg_info_gain, M_left, M_right, S_left, S_right, train_inds_left, train_inds_right] = SplitInfoGain(thresh, train_features, feature_ind, parent_node, train_in, train_out, settings)
 
 

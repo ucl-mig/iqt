@@ -1,4 +1,12 @@
 function pfmap = PatchFeatureMapEdge(dt_lowres, n, T, comipatchmean, version)
+% 
+% ---------------------------
+% Part of the IQT matlab package
+% https://github.com/ucl-mig/iqt
+% (c) MIG, CMIC, UCL, 2017
+% License: LICENSE
+% ---------------------------
+%
 
 if(nargin<4)
     version = 1;

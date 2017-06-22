@@ -27,6 +27,9 @@ function create_trainingset(input_dir, train_dir, data_folders, ...
 % ---------------------------
 %
 
+check_path(input_dir);
+check_path(train_dir);
+check_path(sub_path);
 
 SR = sample_rate;
 rnds = no_rnds;
@@ -39,12 +42,16 @@ if(~exist(train_dir, 'dir'))
 end
 
 % Loop over randomizations
-for si = 1:rnds
+parfor si = 1:rnds
+	comipatchlib = []; comopatchlib = []; patchlibindices = [];
     for i=1:length(data_folders)
-        load([input_dir '/' data_folders{i} '/' ...
+        data = load([input_dir data_folders{i} '/' sub_path ...
               sprintf('ipatchlibDS%02i_N%02i', ds, n)]);
-        load([input_dir '/' data_folders{i} '/' ...
+	    ipatchlib = data.ipatchlib;
+        data = load([input_dir data_folders{i} '/' sub_path ...
               sprintf('opatchlibDS%02i_N%02i_M%02i', ds, n, m)]);
+	    opatchlib = data.opatchlib;
+        data = [];
           
 %         if(n>1)
 %             % Need to subsample the opatchlib to match the ipatchlib
@@ -71,7 +78,10 @@ for si = 1:rnds
 
     filename = sprintf('PatchLibs_DS%02i_%ix%ix%i_%ix%ix%i_Sub%03i_%04i.mat', ds, 2*n+1,2*n+1,2*n+1, m, m, m, SR, si);
     fprintf('Saving the patch-library as: %s\n', filename);
-    save([train_dir filename], 'comipatchlib', 'comopatchlib', 'patchlibindices', '-v7.3');
+	myS = [];
+	myS.comipatchlib = comipatchlib; myS.comopatchlib = comopatchlib; myS.patchlibindices = patchlibindices;
+	parsave_struct([train_dir filename], myS, '-v7.3');
+	myS = [];
 end
 fprintf('The training set is available at: %s\n', train_dir);
 
