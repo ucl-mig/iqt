@@ -1,4 +1,4 @@
-function check_path(path)
+function check_path(pathstr)
 % 
 % ---------------------------
 % Part of the IQT matlab package
@@ -8,7 +8,7 @@ function check_path(path)
 % ---------------------------
 %
 
-if ~strcmp(path(end), filesep)
+if ~strcmp(pathstr(end), filesep)
     error('[IQT] Incorrect path-string, does not end with a slash: %s',...
-        path)
+        pathstr)
 end
