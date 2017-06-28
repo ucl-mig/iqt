@@ -8,7 +8,7 @@ function check_path(pathstr)
 % ---------------------------
 %
 
-if ~strcmp(pathstr(end), filesep)
+if ~(strcmp(pathstr(end), '\') || strcmp(pathstr(end), '/'))
     error('[IQT] Incorrect path-string, does not end with a slash: %s',...
         pathstr)
 end
