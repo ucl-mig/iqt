@@ -47,10 +47,7 @@ command | description
 --- | ---
 `train_preprocess.m` | Creates the training data from the chosen subjects and generates paired patch libraries.
 `train_rf.m` | Trains the chosen number of trees from the paired patch libraries.
-`test_rf.m` | __A demonstration that can be used to get a quick flavour of the IQT code__. 
-It is also useful to visualise the results of the training. It requires HCP data and 
-automatically visualises the mean diffusivity (MD), fractional anisotropy (FA) and colour encoded directional map (CFA) 
-of the predicted high-resolution DTI, and saves all in a MATLAB FIG file.
+`test_rf.m` | __A demonstration that can be used to get a quick flavour of the IQT code__. It is also useful to visualise the results of the training. It requires HCP data and automatically visualises the mean diffusivity (MD), fractional anisotropy (FA) and colour encoded directional map (CFA) of the predicted high-resolution DTI, and saves all in a MATLAB FIG file.
 
 The figure below is a typical visualisation from `test_rf.m` and illustrates results of x3 super-resolution 
 with 3x3x3 input patch on subject 117324. Note that no boundary completion was performed here. 
