@@ -4,7 +4,6 @@
 %
 %   This is a script, you have to edit the 'settings'.
 % 
-%   TODO
 % ---------------------------
 % Part of the IQT matlab package
 % https://github.com/ucl-mig/iqt
@@ -14,10 +13,13 @@
 %
 
 %% Settings
+% -- edit the following settings --
+
 addpath(genpath('.'));
 
 % Set paths (always end directory paths with a forward/back slash)
-out_dir = '/cs/research/vision/hcp/Auro/iqt.github_test/'; % typically root dir where results are stored
+out_dir = '/TrainResults/root/'; % typically root dir where results are stored
+
 train_dir = [out_dir 'TrainingData/']; % dir where training sets will be saved
 
 % Check
@@ -26,12 +28,13 @@ if strcmp(out_dir, '')
 end
 
 % Optional settings
-upsample_rate = 2; % the super-resolution factor
-input_radius = 2; % the radius of the low-res input patch i.e. the input is a cubic patch of size (2*input_radius+1)^3
-datasample_rate = 32; % determines the size of training sets. From each subject, we randomly draw patches with probability 1/datasample_rate
+upsample_rate = 2; % the super-resolution factor (m in paper)
+input_radius = 2; % the radius of the low-res input patch i.e. the input is a cubic patch of size (2*input_radius+1)^3 (n in paper)
+datasample_rate = 2; % determines the size of training sets. From each subject, we randomly draw patches with probability 1/datasample_rate
 no_rnds = 8; % no of separate training sets to be created
 feature_version = 6; % feature set used in Neuroimage paper. See PatchFeatureList.m for details
 
+% -- end of settings --
 
 %%
 open_matlabpool();

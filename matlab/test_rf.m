@@ -12,15 +12,17 @@
 %
 
 %% Settings
+% -- edit the following settings --
+
 addpath(genpath('.'));
 
 % Set paths (always end directory paths with a forward/back slash)
-inp_dir = '/cs/research/vision/hcp/HCP/'; % dir where DWI data is stored (eg HCP data root)
-% out_dir = '/cs/research/vision/hcp/Auro/iqt.github_test/';  % typically root dir where results are stored
-out_dir = '~/Data/ClusterDRIVE01/hcp/Auro/iqt.github_test/';  % typically root dir where results are stored
-trees_dir = [out_dir 'TrainingData/']; %'./trees/'; % dir where RF trees are saved (default: precomputed trees dir)
+inp_dir = '/HCP/root'; % dir where DWI data is stored (eg HCP data root)
+out_dir = '/Results/root';  % typically root dir where results are stored
 % list of test data subjects
 data_folders = {'904044', '165840'}; %, '889579', '713239', '899885', '117324', '214423', '857263'};
+
+trees_dir = './trees/'; % dir where RF trees are saved (default: precomputed trees dir)
 
 % Check
 if strcmp(out_dir, '')
@@ -37,9 +39,9 @@ grad_file = 'grad_dev.nii'; % gradient non-linearities (HCP only: grad_dev.nii)
                             % For non-HCP: grad_file = ''
 dt_pref = 'dt_b1000_'; % DTI name prefix
 
-upsample_rate = 2; % the super-resolution factor
-input_radius = 2; % the radius of the low-res input patch i.e. the input is a cubic patch of size (2*input_radius+1)^3
-datasample_rate = 32; % determines the size of training sets. From each subject, we randomly draw patches with probability 1/datasample_rate
+upsample_rate = 2; % the super-resolution factor (m in paper)
+input_radius = 2; % the radius of the low-res input patch i.e. the input is a cubic patch of size (2*input_radius+1)^3 (n in paper)
+datasample_rate = 2; % determines the size of training sets. From each subject, we randomly draw patches with probability 1/datasample_rate
 no_rnds = 8; % no of separate training sets to be created
 feature_version = 6; % feature set used in Neuroimage paper. See PatchFeatureList.m for details
 
@@ -53,6 +55,7 @@ construct_edge = 0;
 % flag should be off.
 flip_dim = 1;
 
+% -- end of settings --
 
 %%
 open_matlabpool();
