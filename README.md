@@ -43,14 +43,14 @@ set `construct_edge = 1` in the _`Settings`_. Reconstruction takes about 10 minu
 
 If you wish to train your own trees for your problem, you can use the following functions along with the recommended HCP data.
 
-<table>
-<tr><td>`train_preprocess.m`</td><td>Creates the training data from the chosen subjects and generates paired patch libraries.</td></tr>
-<tr><td>`train_rf.m`</td><td>Trains the chosen number of trees from the paired patch libraries.</td></tr>
-<tr><td>`test_rf.m`</td><td>__A demonstration that can be used to get a quick flavour of the IQT code__. 
+command | description
+--- | ---
+`train_preprocess.m` | Creates the training data from the chosen subjects and generates paired patch libraries.
+`train_rf.m` | Trains the chosen number of trees from the paired patch libraries.
+`test_rf.m` | __A demonstration that can be used to get a quick flavour of the IQT code__. 
 			    It is also useful to visualise the results of the training. It requires HCP data and 
 			    automatically visualises the mean diffusivity (MD), fractional anisotropy (FA) and colour encoded directional map (CFA) 
-			    of the predicted high-resolution DTI, and saves all in a MATLAB FIG file.</td></tr>
-</table>
+			    of the predicted high-resolution DTI, and saves all in a MATLAB FIG file.
 
 The figure below is a typical visualisation from `test_rf.m` and illustrates results of x3 super-resolution 
 with 3x3x3 input patch on subject 117324. Note that no boundary completion was performed here. 
@@ -61,10 +61,11 @@ with 3x3x3 input patch on subject 117324. Note that no boundary completion was p
 
 A script is provided to convert the super-resolved DTI in the IQT compatible format to standard 4D NIFTI format.
 
-<table>
-<tr><td>`dti_from_IQT_format.m`</td><td>Convert DTI from the IQT compatible format to a 4D NIFTI.
-					Default element ordering is MRtrix3 compatible (Dxx, Dyy, Dzz, Dxy, Dxz, Dyz).</td></tr>
-</table>
+command | description
+--- | ---
+`dti_from_IQT_format.m` | Convert DTI from the IQT compatible format to a 4D NIFTI.
+				Default element ordering is MRtrix3 compatible (Dxx, Dyy, Dzz, Dxy, Dxz, Dyz).
+
 
 
 ## Citation
