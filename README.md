@@ -27,6 +27,7 @@ For each script you need to edit the _`Settings`_ section to set the correct pat
 Pretrained random forest models for super-resolution that were trained following the paper (see [Ciation](#citation)) are included along with this software.
 These can be used to super-resolve your DTI data.
 
+ | 
 --- | ---
 `compute_model_dti.m` | Compute DTI on your data and save in IQT compatible format.
 `reconstruct_hires_dti.m` | Compute super-resolution DTI from your "low-quality" DTI.
