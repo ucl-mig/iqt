@@ -56,7 +56,7 @@ with 3x3x3 input patch on subject 117324. Note that no boundary completion was p
 
 ### Utilities
 
-A script is provided to convert the super-resolved DTI in the IQT compatible format to standard 4D NIFTI format.
+A script is provided to convert the super-resolved DTI from the IQT compatible format to standard 4D NIFTI format.
 
 command | description
 --- | ---
