@@ -60,8 +60,7 @@ A script is provided to convert the super-resolved DTI in the IQT compatible for
 
 command | description
 --- | ---
-`dti_from_IQT_format.m` | Convert DTI from the IQT compatible format to a 4D NIFTI.
-				Default element ordering is MRtrix3 compatible (Dxx, Dyy, Dzz, Dxy, Dxz, Dyz).
+`dti_from_IQT_format.m` | Convert DTI from the IQT compatible format to a 4D NIFTI. Default element ordering is MRtrix3 compatible (Dxx, Dyy, Dzz, Dxy, Dxz, Dyz).
 
 
 
