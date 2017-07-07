@@ -81,7 +81,7 @@ NeuroImage paper: "**Image quality transfer and applications in diffusion MRI**"
 
 ### Video
 
-This YouTube video showcases x2 and x3 super-resolved DTI CFA maps computed from the original HCP data.
+This YouTube video showcases x2 and x3 super-resolved DTI CFA maps computed from the original HCP data, going from 1.25mm to 0.63mm and 0.42mm.
 More details are in the video's description.
 
 [![IQT Demo](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be)
