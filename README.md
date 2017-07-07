@@ -28,8 +28,8 @@ Pretrained random forest models for super-resolution that were trained following
 These can be used to super-resolve your DTI data.
 
 <table>
-<tr><td> `compute_model_dti.m` </td><td>Compute DTI on your data and save in IQT compatible format.</td></tr>
-<tr><td> `reconstruct_hires_dti.m` </td><td>Compute super-resolution DTI from your "low-quality" DTI.</td></tr>
+<tr><td> ```compute_model_dti.m``` </td><td>Compute DTI on your data and save in IQT compatible format.</td></tr>
+<tr><td> ```reconstruct_hires_dti.m``` </td><td>Compute super-resolution DTI from your "low-quality" DTI.</td></tr>
 </table>
 
 Pretrained trees can be found in the directory `trees`. These trees can perform x2 or x3 super-resolution with input patches of size 5x5x5. 
