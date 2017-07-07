@@ -80,6 +80,9 @@ If you use this pipeline in your research, please cite:
 NeuroImage paper: "**Image quality transfer and applications in diffusion MRI**" [(link)](http://www.sciencedirect.com/science/article/pii/S1053811917302008).  
 
 ### Video
+
+The YouTube video showcases x2 and x3 super-resolved DTI colour-FA maps computed on the original HCP data.
+
 [![IQT Demo](https://img.youtube.com/vi/_738lFAZSUk/0.jpg)](https://www.youtube.com/watch?v=_738lFAZSUk&feature=youtu.be)
 
 ## Notes
