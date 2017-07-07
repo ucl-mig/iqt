@@ -30,7 +30,6 @@ These can be used to super-resolve your DTI data.
 Command | Description
 --- | ---
 `compute_model_dti.m` | Compute DTI on your data and save in IQT compatible format.
---- | ---
 `reconstruct_hires_dti.m` | Compute super-resolution DTI from your "low-quality" DTI.
 
 
