@@ -11,7 +11,8 @@
 ## Introduction
 __Image Quality Transfer (IQT)__ aims to bridge the technological gap that exists between bespoke and expensive experimental systems such as the Human Connectome Project (HCP) scanner and accessible commercial clinical systems using machine learning (ML). The technique learns mappings from low quality (e.g. clinical) to high quality (e.g. experimental) images exploiting the similarity of images across subjects, regions, modalities, and scales: image macro- and meso-structure is highly predictive of sub-voxel content. The mapping may then operate directly on low-quality images to estimate the corresponding high-quality images, or serve as a prior in an otherwise ill-posed image-reconstruction routine. 
 
-The current version supports super-resolution of diffusion tensor images (DTIs).
+The current version provides a MATLAB implementation of IQT for super-resolution of diffusion tensor images (DTIs) using random forests (RFs). 
+
 
 ## Data
 To achieve the best quality, training should be done on datasets available from the HCP project. 
