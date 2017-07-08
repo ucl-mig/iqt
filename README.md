@@ -25,7 +25,7 @@ For each script you need to edit the _`Settings`_ section to set the correct pat
 
 ### Application
 
-Pretrained random forest models for super-resolution that were trained following the paper (see [Ciation](#citation)) are included along with this software.
+Pretrained random forest models for super-resolution that were trained following the paper (see [Citation](#citation)) are included along with this software.
 These can be used to super-resolve your DTI data.
 
 command | description
