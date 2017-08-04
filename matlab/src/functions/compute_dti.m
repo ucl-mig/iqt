@@ -52,7 +52,7 @@ parfor fi = 1:length(data_folders)
     % Read in the DWI data
     fprintf('Loading DWI: %s (%s)\n', dw_file, data_folders{fi});
     nii = load_nii( [input_folder dw_file] );
-    dw = nii.img;
+    dw = double(nii.img);
     [XSIZE,YSIZE,ZSIZE,~] = size(dw);
     hdr = nii.hdr;
     
